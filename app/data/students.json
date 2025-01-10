@@ -1,0 +1,73 @@
+[
+  {
+    "studentNationalId": "1234567890",
+    "studentFullName": "John Doe",
+    "yearOfGraduation": 2023,
+    "endDate": "2023-05-15",
+    "obtainedCertificate": "Bachelor of Science in Computer Science",
+    "institutionName": "University of Technology",
+    "institutionCountry": "United States",
+    "isAccredited": true,
+    "cgpa": 3.8,
+    "nationalId": "US-1234567890",
+    "qualification": "Bachelor's Degree",
+    "studyProgram": "Computer Science"
+  },
+  {
+    "studentNationalId": "2345678901",
+    "studentFullName": "Jane Smith",
+    "yearOfGraduation": 2022,
+    "endDate": "2022-12-20",
+    "obtainedCertificate": "Master of Business Administration",
+    "institutionName": "Global Business School",
+    "institutionCountry": "United Kingdom",
+    "isAccredited": true,
+    "cgpa": 3.9,
+    "nationalId": "UK-2345678901",
+    "qualification": "Master's Degree",
+    "studyProgram": "Business Administration"
+  },
+  {
+    "studentNationalId": "3456789012",
+    "studentFullName": "Ahmed Al-Mansour",
+    "yearOfGraduation": 2021,
+    "endDate": "2021-06-30",
+    "obtainedCertificate": "Bachelor of Arts in Psychology",
+    "institutionName": "Midwest University",
+    "institutionCountry": "Canada",
+    "isAccredited": true,
+    "cgpa": 3.5,
+    "nationalId": "CA-3456789012",
+    "qualification": "Bachelor's Degree",
+    "studyProgram": "Psychology"
+  },
+  {
+    "studentNationalId": "4567890123",
+    "studentFullName": "Maria Garcia",
+    "yearOfGraduation": 2023,
+    "endDate": "2023-08-31",
+    "obtainedCertificate": "Doctor of Philosophy in Physics",
+    "institutionName": "European Institute of Science",
+    "institutionCountry": "Germany",
+    "isAccredited": true,
+    "cgpa": 4.0,
+    "nationalId": "DE-4567890123",
+    "qualification": "PhD",
+    "studyProgram": "Theoretical Physics"
+  },
+  {
+    "studentNationalId": "5678901234",
+    "studentFullName": "Yuki Tanaka",
+    "yearOfGraduation": 2022,
+    "endDate": "2022-03-25",
+    "obtainedCertificate": "Master of Engineering in Robotics",
+    "institutionName": "Tokyo Tech University",
+    "institutionCountry": "Japan",
+    "isAccredited": true,
+    "cgpa": 3.7,
+    "nationalId": "JP-5678901234",
+    "qualification": "Master's Degree",
+    "studyProgram": "Robotics and Automation"
+  }
+]
+

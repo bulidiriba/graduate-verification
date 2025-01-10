@@ -1,0 +1,262 @@
+{
+  "AASTU": {
+    "id": 1,
+    "shortName": "AASTU",
+    "fullName": "Addis Ababa Science and Technology University"
+  },
+  "AAU": {
+    "id": 2,
+    "shortName": "AAU",
+    "fullName": "Addis Ababa University"
+  },
+  "AGU": {
+    "id": 3,
+    "shortName": "AGU",
+    "fullName": "Adigrat University"
+  },
+  "AMBOU": {
+    "id": 4,
+    "shortName": "AMBOU",
+    "fullName": "Ambo University"
+  },
+  "AMU": {
+    "id": 5,
+    "shortName": "AMU",
+    "fullName": "Arba Minch University"
+  },
+  "ARSIUN": {
+    "id": 6,
+    "shortName": "ARSIUN",
+    "fullName": "Arsi University"
+  },
+  "ASTU": {
+    "id": 7,
+    "shortName": "ASTU",
+    "fullName": "Adama science & technology University"
+  },
+  "ASU": {
+    "id": 8,
+    "shortName": "ASU",
+    "fullName": "Assossa Universty"
+  },
+  "AXU": {
+    "id": 9,
+    "shortName": "AXU",
+    "fullName": "Axum University"
+  },
+  "BDU": {
+    "id": 10,
+    "shortName": "BDU",
+    "fullName": "Bahir Dar University"
+  },
+  "BHU": {
+    "id": 11,
+    "shortName": "BHU",
+    "fullName": "Bule Hora Universty"
+  },
+  "BRU": {
+    "id": 12,
+    "shortName": "BRU",
+    "fullName": "Borana University"
+  },
+  "BU": {
+    "id": 13,
+    "shortName": "BU",
+    "fullName": "Bonga Universty"
+  },
+  "DaDU": {
+    "id": 14,
+    "shortName": "DaDU",
+    "fullName": "Dambi Dollo Universty"
+  },
+  "DBU": {
+    "id": 15,
+    "shortName": "DBU",
+    "fullName": "Debre Berhan University"
+  },
+  "DDU": {
+    "id": 16,
+    "shortName": "DDU",
+    "fullName": "Dire-Dawa University"
+  },
+  "DEFU": {
+    "id": 17,
+    "shortName": "DEFU",
+    "fullName": "Defence Universty"
+  },
+  "DKU": {
+    "id": 18,
+    "shortName": "DKU",
+    "fullName": "Debark Universty"
+  },
+  "DMU": {
+    "id": 19,
+    "shortName": "DMU",
+    "fullName": "Debre Markos University"
+  },
+  "DTU": {
+    "id": 20,
+    "shortName": "DTU",
+    "fullName": "Debre Tabor Universty"
+  },
+  "DU": {
+    "id": 21,
+    "shortName": "DU",
+    "fullName": "Dilla University"
+  },
+  "DU-IIS": {
+    "id": 22,
+    "shortName": "DU-IIS",
+    "fullName": "Institute of Indigenous Studies"
+  },
+  "ECSU": {
+    "id": 23,
+    "shortName": "ECSU",
+    "fullName": "Ethiopian Civil Service Universty"
+  },
+  "GmU": {
+    "id": 24,
+    "shortName": "GmU",
+    "fullName": "Gambella University"
+  },
+  "HrU": {
+    "id": 25,
+    "shortName": "HrU",
+    "fullName": "Haramaya University"
+  },
+  "HU": {
+    "id": 26,
+    "shortName": "HU",
+    "fullName": "Hawassa University"
+  },
+  "INU": {
+    "id": 27,
+    "shortName": "INU",
+    "fullName": "Injibara Universty"
+  },
+  "JJU": {
+    "id": 28,
+    "shortName": "JJU",
+    "fullName": "Jigjiga University"
+  },
+  "JKU": {
+    "id": 29,
+    "shortName": "JKU",
+    "fullName": "Jinka Universty"
+  },
+  "JU": {
+    "id": 30,
+    "shortName": "JU",
+    "fullName": "Jimma University"
+  },
+  "KDU": {
+    "id": 31,
+    "shortName": "KDU",
+    "fullName": "Kebridehar University"
+  },
+  "KUE": {
+    "id": 32,
+    "shortName": "KUE",
+    "fullName": "Kotebe University of Education"
+  },
+  "MAU": {
+    "id": 33,
+    "shortName": "MAU",
+    "fullName": "Mekidela Amba Universty"
+  },
+  "MEU": {
+    "id": 34,
+    "shortName": "MEU",
+    "fullName": "Mettu university"
+  },
+  "MTU": {
+    "id": 35,
+    "shortName": "MTU",
+    "fullName": "Mizan-Tepi University"
+  },
+  "MU": {
+    "id": 36,
+    "shortName": "MU",
+    "fullName": "Mekelle University"
+  },
+  "MWU": {
+    "id": 37,
+    "shortName": "MWU",
+    "fullName": "Madda Walabu University"
+  },
+  "OBU": {
+    "id": 38,
+    "shortName": "OBU",
+    "fullName": "Oda Bultum"
+  },
+  "OPC": {
+    "id": 39,
+    "shortName": "OPC",
+    "fullName": "Oromia Policy College"
+  },
+  "OSU": {
+    "id": 40,
+    "shortName": "OSU",
+    "fullName": "Oromia State University"
+  },
+  "PUC": {
+    "id": 41,
+    "shortName": "PUC",
+    "fullName": "Police Universty College"
+  },
+  "RU": {
+    "id": 42,
+    "shortName": "RU",
+    "fullName": "Raya Universty"
+  },
+  "SLU": {
+    "id": 43,
+    "shortName": "SLU",
+    "fullName": "Salale University"
+  },
+  "SU": {
+    "id": 44,
+    "shortName": "SU",
+    "fullName": "Samara University"
+  },
+  "UOG": {
+    "id": 45,
+    "shortName": "UOG",
+    "fullName": "University of Gondar"
+  },
+  "WCU": {
+    "id": 46,
+    "shortName": "WCU",
+    "fullName": "Wachemo Universty"
+  },
+  "WKU": {
+    "id": 47,
+    "shortName": "WKU",
+    "fullName": "Wolkite University"
+  },
+  "WLDU": {
+    "id": 48,
+    "shortName": "WLDU",
+    "fullName": "Woldiya University"
+  },
+  "WRU": {
+    "id": 49,
+    "shortName": "WRU",
+    "fullName": "Werabe Universty"
+  },
+  "WSU": {
+    "id": 50,
+    "shortName": "WSU",
+    "fullName": "Wolaita Sodo University"
+  },
+  "WU": {
+    "id": 51,
+    "shortName": "WU",
+    "fullName": "Wollo University"
+  },
+  "WUNI": {
+    "id": 52,
+    "shortName": "WUNI",
+    "fullName": "Wollega University"
+  }
+}
