@@ -1,6 +1,7 @@
 import { Header } from '@/components/header'
 import { DocumentUpload } from '@/components/documentUpload'
 import VerifyStudentForm from '@/components/VerifyStudentForm'
+import { Footer } from '@/components/footer'
 
 export default function HomePage() {
   return (
@@ -17,6 +18,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+      <Footer />
     </main>
   )
 }
