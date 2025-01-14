@@ -1,9 +1,29 @@
+"use client"
+
 import { Header } from '@/components/header'
 import { DocumentUpload } from '@/components/documentUpload'
 import VerifyStudentForm from '@/components/VerifyStudentForm'
 import { Footer } from '@/components/footer'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function HomePage() {
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken')
+    if (!token) {
+      router.push('/')
+    } else {
+      setIsLoading(false)
+    }
+  }, [router])
+
+  if (isLoading) {
+    return <div></div>
+  }
+
   return (
     <main className="w-full min-h-screen bg-gray-50">
       <Header />

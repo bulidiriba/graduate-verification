@@ -8,47 +8,49 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from 'lucide-react'
+import Cookies from 'js-cookie'
 
-export default function LoginForm() {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError('')
-
-    const formData = new FormData(e.currentTarget)
-    const username = formData.get('username') as string
-    const password = formData.get('password') as string
-
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Login failed')
+  export default function LoginForm() {
+    const router = useRouter()
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState('')
+  
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+      setIsLoading(true)
+      setError('')
+  
+      const formData = new FormData(e.currentTarget)
+      const username = formData.get('username') as string
+      const password = formData.get('password') as string
+  
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        })
+  
+        if (!response.ok) {
+          throw new Error('Login failed')
+        }
+  
+        const data = await response.json()
+        if (data.token) {
+          localStorage.setItem('authToken', data.token)
+          Cookies.set('authToken', data.token, { expires: 7 }) // Set cookie to expire in 7 days
+          router.push('/verify')
+        } else {
+          throw new Error('No token received')
+        }
+      } catch (err) {
+        setError('Invalid credentials or server error')
+      } finally {
+        setIsLoading(false)
       }
-
-      const data = await response.json()
-      if (data.token) {
-        localStorage.setItem('authToken', data.token)
-        router.push('/verify')
-      } else {
-        throw new Error('No token received')
-      }
-    } catch (err) {
-      setError('Invalid credentials or server error')
-    } finally {
-      setIsLoading(false)
     }
-  }
 
   return (
 <div className="min-h-screen flex relative overflow-hidden">
