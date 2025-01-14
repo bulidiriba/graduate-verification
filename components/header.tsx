@@ -5,16 +5,22 @@ import { Mail, Phone, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
 
 export function Header() {
   const router = useRouter()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken')
+    setIsAuthenticated(!!token)
+  }, [])
 
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated')
+    localStorage.removeItem('authToken')
+    setIsAuthenticated(false)
     router.push('/')
   }
-
-  const isAuthenticated = typeof window !== 'undefined' && localStorage.getItem('isAuthenticated') === 'true'
 
   return (
     <header className="bg-white shadow-sm p-2 md:p-1">

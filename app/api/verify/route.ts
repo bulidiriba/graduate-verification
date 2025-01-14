@@ -6,13 +6,13 @@ export async function GET(request: Request) {
   const name = searchParams.get('name')
   const institution = searchParams.get('institution')
   const year = searchParams.get('year')
+  const apiToken = searchParams.get('token')
 
   if (!name || !institution || !year) {
     return NextResponse.json({ error: 'Full Name, Institution, and Year of Graduation are required' }, { status: 400 })
   }
   console.log("search params", searchParams)
-  const apiToken = process.env.API_TOKEN
-  const apiBaseUrl = process.env.API_BASE_URL
+  const apiBaseUrl = "http://hemis.ethernet.edu.et/backend"
 
   if (!apiToken || !apiBaseUrl) {
     return NextResponse.json({ error: 'API configuration is missing' }, { status: 500 })

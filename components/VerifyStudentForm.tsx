@@ -37,12 +37,20 @@ export default function VerifyStudentForm() {
     setError(null)
     setResult(null)
 
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      setError('Authentication failed. Please login to continue.')
+      setIsLoading(false)
+      return
+    }
+
     try {
       const queryParams = new URLSearchParams({
         name: studentFullName,
         institution: institutionName,
         year: internationalYear,
-        qualification: qualification
+        qualification: qualification,
+        token: token
       })
       if (studentId) {
         queryParams.append('studentNationalId', studentId)
