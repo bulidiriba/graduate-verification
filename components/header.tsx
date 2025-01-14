@@ -7,13 +7,12 @@ export function Header() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-1">
         <div className="flex items-center gap-1">
           <Image
-            src="/moe-logo.png?height=100&width=100"
+            src="/moe-logo.svg"
             alt="MiNT Logo"
-            width={100}
-            height={100}
+            width={80}
+            height={80}
             
           />
-          
           <div className="flex flex-col">
             <span className="text-[#4285f4] md:text">
               FDRE 
@@ -21,8 +20,8 @@ export function Header() {
             <h2 className="text-[#4285f4] md:text font-semibold">
               Minstry Of Education 
             </h2>
-            <p className="text-[#34A853] text-sm md:text-base">
-                Digitizing Degree Verification
+            <p className="text-[#184693] text-sm md:text-base">
+                Graduate Verification System
             </p>
           </div>
         </div>
