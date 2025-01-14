@@ -23,13 +23,6 @@ export default function ContactPage() {
           </div>
           <h1 className="text-3xl font-bold text-[#2F4D8A]">Contact Us</h1>
         </div>
-        {/* Color Stripes */}
-        <div className="absolute top-0 right-0 flex h-2 w-32">
-          <div className="flex-1 bg-[#F4B223]" />
-          <div className="flex-1 bg-[#DE3024]" />
-          <div className="flex-1 bg-[#4B9CD3]" />
-          <div className="flex-1 bg-[#2F4D8A]" />
-        </div>
       </div>
 
       {/* Contact Info Grid */}
