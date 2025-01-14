@@ -154,7 +154,7 @@ export default function LoginForm() {
 {/* Background Image with Gradient Blur */}
 <div className="h-screen w-screen z-0 ">
  <Image
-   src="/background.jpg"
+   src="/background2.jpg"
    alt="Background"
    fill
    className="image-cover image-center object-center object-cover blur-sm w-full h-full"
@@ -164,7 +164,7 @@ export default function LoginForm() {
 </div>
 
       {/* Footer Stripes */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 h-2 flex">
+      <div className="fixed bottom-0 left-0 right-0 z-20 h-3 flex">
         <div className="flex-1 bg-[#F4B223]" /> {/* Yellow */}
         <div className="flex-1 bg-[#DE3024]" /> {/* Red */}
         <div className="flex-1 bg-[#4B9CD3]" /> {/* Light Blue */}

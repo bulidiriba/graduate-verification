@@ -67,7 +67,7 @@ export function Footer() {
       </div>
 
       {/* Color Stripes */}
-      <div className="h-2 flex">
+      <div className="h-3 flex">
         <div className="flex-1 bg-[#F4B223]" /> {/* Yellow */}
         <div className="flex-1 bg-[#DE3024]" /> {/* Red */}
         <div className="flex-1 bg-[#4B9CD3]" /> {/* Light Blue */}
