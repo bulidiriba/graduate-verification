@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'MoE | University Graduate Verification System',
   description: 'University Graduate Verification System',
   icons: {
-    icon: '/moe-logo.png',
+    icon: '/moe-logo.svg',
   },
 }
 
