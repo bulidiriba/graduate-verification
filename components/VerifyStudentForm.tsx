@@ -3,13 +3,13 @@
 import { useState, useRef, useEffect } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import institutions from "@/data/institutions.json"
 import year from "@/data/years.json"
 import qualificationsData from "@/data/qualifications.json"
-import { Loader2 } from 'lucide-react'
+import { Loader2, Search, User, Building, GraduationCap, Calendar } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import ResultContainer from '@/components/ResultContainer'
 
 export default function VerifyStudentForm() {
   const [studentId, setStudentId] = useState('')
@@ -122,175 +122,142 @@ export default function VerifyStudentForm() {
     }
   }, [])
 
-  useEffect(() => {
-    const resultContainer = document.getElementById('result-container')
-    if (resultContainer) {
-      if (error) {
-        resultContainer.innerHTML = `
-        <div class="mt-6 flex justify-center">
-          <div class="bg-white rounded-lg shadow-sm p-6 max-w-2xl w-full">
-            <h3 class="text-lg font-semibold mb-4 text-red-600">Error</h3>
-            <p>${error}</p>
-          </div>
-        </div>
-      `
-      } else if (result) {
-        resultContainer.innerHTML = `
-        <div class="mt-6 flex justify-center">
-          <div class="bg-white rounded-lg shadow-sm p-6 max-w-2xl w-full">
-            <h3 class="text-lg font-semibold mb-4">${result.exists ? "This Student is Verified." : "The Student Not Found"}</h3>
-            ${result.exists ? `
-              <div class="space-y-2">
-                <p><strong>Name:</strong> ${result.student.studentFullName}</p>
-                <p><strong>National ID:</strong> ${result.student.studentNationalId}</p>
-                <p><strong>Qualification:</strong> ${result.student.qualification}</p>
-                <p><strong>Study Program:</strong> ${result.student.studyProgram}</p>
-                <p><strong>Obtained Certificate:</strong> ${result.student.obtainedCertificate}</p>
-                <p><strong>Year of Graduation:</strong> ${result.student.yearOfGraduation}</p>
-                <p><strong>End Date:</strong> ${result.student.endDate}</p>
-                <p><strong>Institution:</strong> ${result.student.institutionName}</p>
-                <p><strong>Country:</strong> ${result.student.institutionCountry}</p>
-                <p><strong>Accredited:</strong> ${result.student.isAccredited ? 'Yes' : 'No'}</p>
-                <p><strong>CGPA:</strong> ${result.student.cgpa}</p>
-              </div>
-            ` : "No student found with the provided information."}
-          </div>
-        </div>
-      `
-      } else {
-        resultContainer.innerHTML = ''
-      }
-    }
-  }, [result, error])
-
   return (
     <>
-      <Card>
-      <CardHeader>
-        <CardTitle className="text-xl text-gray-600">Fill the Form</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1">
+      <Card className="bg-white shadow-lg rounded-lg overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6">
+          <CardTitle className="text-2xl font-bold text-center">Verify Student</CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <label htmlFor="studentId" className="text-sm font-medium text-gray-700 flex items-center">
+                <User className="w-4 h-4 mr-2" />
                 Student National ID (Optional)
               </label>
-              <input
+              <Input
                 id="studentId"
-                type="text"
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value)}
-                placeholder="Enter student national ID (optional)"
-                className="h-14 w-full rounded-[8px] border-2 border-gray-300 bg-white px-4 text-base hover:border-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-colors"
+                placeholder="Enter student national ID"
+                className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
               />
             </div>
-            <div>
-              <label htmlFor="studentFullName" className="block text-sm font-medium text-gray-700 mb-1">
+
+            <div className="space-y-2">
+              <label htmlFor="studentFullName" className="text-sm font-medium text-gray-700 flex items-center">
+                <User className="w-4 h-4 mr-2" />
                 Student Full Name
               </label>
-              <input
+              <Input
                 id="studentFullName"
-                type="text"
                 value={studentFullName}
                 onChange={(e) => setStudentFullName(e.target.value)}
                 placeholder="Enter student full name"
-                className="h-14 w-full rounded-[8px] border-2 border-gray-300 bg-white px-4 text-base hover:border-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-colors"
+                className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
                 required
               />
             </div>
 
-            <div className="relative">
-              <label htmlFor="institutionName" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="space-y-2">
+              <label htmlFor="institutionName" className="text-sm font-medium text-gray-700 flex items-center">
+                <Building className="w-4 h-4 mr-2" />
                 Institution Name
               </label>
-              <input
-                ref={inputRef}
-                type="text"
-                value={institutionFullName}
-                onChange={(e) => handleInputChange(e.target.value)}
-                onFocus={() => setOpen(true)}
-                placeholder="Where are you graduated?"
-                className="h-14 w-full rounded-[8px] border-2 border-gray-300 bg-white px-4 text-base hover:border-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-colors"
-              />
-              {open && (
-                <div 
-                  ref={popoverRef}
-                  className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg"
-                >
-                  <div className="p-4 max-h-60 overflow-y-auto">
-                    {filteredDestinations.length > 0 ? (
-                      filteredDestinations.map((key) => (
-                        <button
-                          key={institutions[key as keyof typeof institutions].id}
-                          className="flex w-full items-start gap-3 rounded-sm p-2 text-left hover:bg-gray-100"
-                          onClick={() => handleSelectInstitution(key)}
-                        >
-                          <div className="flex flex-col">
-                            <span className="font-bold text-[16px]">
-                              {institutions[key as keyof typeof institutions].shortName}
-                            </span>
-                            <span className="text-[14px] text-gray-600">
-                              {institutions[key as keyof typeof institutions].fullName}
-                            </span>
-                          </div>
-                        </button>
-                      ))
-                    ) : (
-                      <div className="text-gray-500 p-2">No matching institutions found</div>
-                    )}
+              <div className="relative">
+                <Input
+                  ref={inputRef}
+                  type="text"
+                  value={institutionFullName}
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  onFocus={() => setOpen(true)}
+                  placeholder="Select institution"
+                  className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
+                />
+                {open && (
+                  <div 
+                    ref={popoverRef}
+                    className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg"
+                  >
+                    <div className="p-4 max-h-60 overflow-y-auto">
+                      {filteredDestinations.length > 0 ? (
+                        filteredDestinations.map((key) => (
+                          <button
+                            key={institutions[key as keyof typeof institutions].id}
+                            className="flex w-full items-start gap-3 rounded-sm p-2 text-left hover:bg-gray-100"
+                            onClick={() => handleSelectInstitution(key)}
+                          >
+                            <div className="flex flex-col">
+                              <span className="font-bold text-[16px]">
+                                {institutions[key as keyof typeof institutions].shortName}
+                              </span>
+                              <span className="text-[14px] text-gray-600">
+                                {institutions[key as keyof typeof institutions].fullName}
+                              </span>
+                            </div>
+                          </button>
+                        ))
+                      ) : (
+                        <div className="text-gray-500 p-2">No matching institutions found</div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
-            <div className="relative">
-             <label htmlFor="yearOfGraduation" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="space-y-2">
+              <label htmlFor="ethiopianYear" className="text-sm font-medium text-gray-700 flex items-center">
+                <Calendar className="w-4 h-4 mr-2" />
                 Year of Graduation
               </label>
-              <input
-                ref={yearInputRef}
-                type="text"
-                value={ethiopianYear}
-                onChange={(e) => handleYearChange(e.target.value)}
-                onFocus={() => setOpenYear(true)}
-                placeholder="When are you graduated?"
-                className="h-14 w-full rounded-[8px] border-2 border-gray-300 bg-white px-4 text-base hover:border-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-colors"
-              />
-              {openYear && (
-                <div 
-                  ref={yearPopoverRef}
-                  className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg"
-                >
-                  <div className="p-4">
-                    {filteredYear.length > 0 ? (
-                      filteredYear.map((value, index) => (
-                        <button
-                          key={index}
-                          className="flex w-full items-start gap-3 rounded-sm p-2 text-left hover:bg-gray-100"
-                          onClick={() => handleSelectYear(value)}
-                        >
-                          <div className="flex flex-col">
-                            <span className="font-bold text-[16px]">{value}</span>
-                            <span className="text-[14px] text-gray-600">
-                              {year[value as keyof typeof year].International}
-                            </span>
-                          </div>
-                        </button>
-                      ))
-                    ) : (
-                      <div className="text-gray-500 p-2">No matching Year found</div>
-                    )}
+              <div className="relative">
+                <Input
+                  ref={yearInputRef}
+                  type="text"
+                  value={ethiopianYear}
+                  onChange={(e) => handleYearChange(e.target.value)}
+                  onFocus={() => setOpenYear(true)}
+                  placeholder="Select year"
+                  className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
+                />
+                {openYear && (
+                  <div 
+                    ref={yearPopoverRef}
+                    className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg"
+                  >
+                    <div className="p-4 max-h-60 overflow-y-auto">
+                      {filteredYear.length > 0 ? (
+                        filteredYear.map((value, index) => (
+                          <button
+                            key={index}
+                            className="flex w-full items-start gap-3 rounded-sm p-2 text-left hover:bg-gray-100"
+                            onClick={() => handleSelectYear(value)}
+                          >
+                            <div className="flex flex-col">
+                              <span className="font-bold text-[16px]">{value}</span>
+                              <span className="text-[14px] text-gray-600">
+                                {year[value as keyof typeof year].International}
+                              </span>
+                            </div>
+                          </button>
+                        ))
+                      ) : (
+                        <div className="text-gray-500 p-2">No matching Year found</div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
-            <div>
-              <label htmlFor="qualification" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="space-y-2">
+              <label htmlFor="qualification" className="text-sm font-medium text-gray-700 flex items-center">
+                <GraduationCap className="w-4 h-4 mr-2" />
                 Qualification
               </label>
               <Select value={qualification} onValueChange={setQualification}>
-                <SelectTrigger className="h-14 w-full rounded-[8px] border-2 border-gray-300 bg-white px-4 text-base hover:border-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-colors">
+                <SelectTrigger className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
                   <SelectValue placeholder="Select qualification" />
                 </SelectTrigger>
                 <SelectContent>
@@ -303,26 +270,28 @@ export default function VerifyStudentForm() {
               </Select>
             </div>
 
-            <div className="flex justify-center">
-              <Button
-                type="submit"
-                className="h-14 w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[8px] transition-colors"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Checking...
-                  </>
-                ) : (
-                  'Check'
-                )}
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Verifying...
+                </>
+              ) : (
+                <>
+                  <Search className="mr-2 h-5 w-5" />
+                  Verify Student
+                </>
+              )}
+            </Button>
           </form>
-      </CardContent>
-    </Card>
-    <div id="result-container" className="flex justify-center"></div>
+        </CardContent>
+      </Card>
+
+      <ResultContainer result={result} error={error} />
     </>
   )
 }
