@@ -9,7 +9,7 @@ import year from "@/data/years.json"
 import qualificationsData from "@/data/qualifications.json"
 import { Loader2, Search, User, Building, GraduationCap, Calendar } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import ResultContainer from '@/components/ResultContainer'
+import ResultContainer from './ResultContainer'
 
 export default function VerifyStudentForm() {
   const [studentId, setStudentId] = useState('')
@@ -125,8 +125,8 @@ export default function VerifyStudentForm() {
   return (
     <>
       <Card className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6">
-          <CardTitle className="text-2xl font-bold text-center">Verify Student</CardTitle>
+        <CardHeader className="p-6 bg-[#2F4D8A]">
+          <CardTitle className="text-2xl font-bold text-center text-white">Verify Student</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -272,7 +272,7 @@ export default function VerifyStudentForm() {
 
             <Button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+              className="w-full bg-[#2F4D8A] hover:bg-[#243c6d] text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
               disabled={isLoading}
             >
               {isLoading ? (
