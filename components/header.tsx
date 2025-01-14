@@ -68,6 +68,9 @@ export function Header() {
           >
             Contact Us
           </Link>
+        </nav>
+
+        <div className="flex items-center gap-6">
           {isAuthenticated ? (
             <Button 
               variant="ghost" 
@@ -82,19 +85,6 @@ export function Header() {
               <Button variant="ghost">Login</Button>
             </Link>
           )}
-        </nav>
-
-        <div className="flex items-center gap-6">
-          <div className="hidden md:flex flex-col items-end">
-            <a href="tel:+91.80.43740453" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
-              <Phone className="h-4 w-4" />
-              <span>+251.80.43740453</span>
-            </a>
-            <a href="mailto:support@icredify.com" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
-              <Mail className="h-4 w-4" />
-              <span>support@moe.com</span>
-            </a>
-          </div>
           
         </div>
       </div>
