@@ -27,19 +27,22 @@ export function Header() {
             height={80}
             
           />
-          <div className="flex flex-col">
-            <span className="text-[#4285f4] md:text">
-              FDRE 
+
+        <div className="items-center -mr-2 flex-0 text-mgray">
+            <span className="text-[10px] tracking-wide flex pl-3 -mb-3">
+                FDRE
             </span>
-            <h2 className="text-[#4285f4] md:text font-semibold">
-              Minstry Of Education 
-            </h2>
-            <p className="text-[#184693] text-sm md:text-base">
+            <span className="inline-flex items-center justify-center px-3 pt-2">
+                Ministry of Education
+            </span>
+            <span className="text-[#263E6E] flex mx-3 -mt-2">
                 Graduate Verification System
-            </p>
-          </div>
+            </span>
+        </div>
+          
         </div>
 
+      
         <nav className="flex items-center gap-6">
           <Link 
             href="/verify" 
