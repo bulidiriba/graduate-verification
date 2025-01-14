@@ -29,10 +29,10 @@ export function Header() {
           />
 
         <div className="items-center -mr-2 flex-0 text-mgray">
-            <span className="text-[10px] tracking-wide flex pl-3 -mb-3">
+            <span className="text-[10px] tracking-wide text-gray-500 flex pl-3 -mb-2">
                 FDRE
             </span>
-            <span className="inline-flex items-center justify-center px-3 pt-2">
+            <span className="inline-flex items-center text-gray-600 justify-center font-bold px-3 -mt-2">
                 Ministry of Education
             </span>
             <span className="text-[#263E6E] flex mx-3 -mt-2">

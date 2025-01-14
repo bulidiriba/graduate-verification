@@ -33,29 +33,13 @@ export default function LoginForm() {
 
   return (
     <div className="min-h-screen flex relative overflow-hidden">
-      {/* Background Image with Gradient Blur */}
-            <div className="fixed inset-0 z-0">
-              <Image
-                src="/background.jpg"
-                alt="Background"
-                fill
-                className="object-cover blur-sm"
-                priority
-              />
-                <div 
-                className="absolute inset-0" 
-                style={{
-                  background: 'linear-gradient(to right, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.95) 10%, rgba(255,255,255,0.8) 15%, rgba(255,255,255,0) 20%)',
-                  backdropFilter: 'blur(1px)'
-                }}
-              />
-            </div>
 
-      {/* Content Container */}
-      <main className=" flex-1 flex flex-col relative z-10 justify-center max-w-md pl-12">
-      <div className="w-full max-w-md mx-auto space-y-8">
+       {/* Content Container */}
+       <main className=" flex flex-col relative z-10 justify-center w-full  ">
+      <div className="px-20 pt-10 relative z-10 flex flex-col h-screen justify-evenly backdrop-blur lg:max-w-xl lg:w-full bg-gradient-to-r from-white via-white/90 to-white/5 ">
+
         {/* Logo */}
-                 <div className="w-24 h-24 relative mx-auto">
+                 <div className="w-32 h-32 relative mx-auto">
                    <Image
                      src="/moe-logo.svg"
                      alt="Ministry of Education Logo"
@@ -69,7 +53,7 @@ export default function LoginForm() {
           
            {/* Title */}
            <div className="text-center space-y-2">
-            <h1 className="text-3xl font-serif text-gray-800 font-semibold">
+            <h1 className="text-3xl text-gray-800 font-bold">
               Graduate Verification System
             </h1>
             <p className="text-gray-600">Login to continue</p>
@@ -142,6 +126,20 @@ export default function LoginForm() {
         </div>
       </div>
       </main>
+
+      {/* Background Image with Gradient Blur */}
+      <div className="h-screen w-screen z-0 ">
+        <Image
+          src="/background.jpg"
+          alt="Background"
+          fill
+          className="image-cover image-center object-center object-cover blur-sm w-full h-full"
+          priority
+        />
+          
+      </div>
+
+     
 
       {/* Footer Stripes */}
       <div className="fixed bottom-0 left-0 right-0 z-20 h-2 flex">
