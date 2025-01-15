@@ -223,7 +223,7 @@ export default function VerifyStudentForm() {
                 <Input
                   ref={yearInputRef}
                   type="text"
-                  value={"Eth: "+ethiopianYear+" (Int: "+internationalYear[1]+")"}
+                  value={"Eth: "+ethiopianYear+" (Int: "+internationalYear[1]+")" ? ethiopianYear : ""}
                   onChange={(e) => handleYearChange(e.target.value)}
                   onFocus={() => setOpenYear(true)}
                   placeholder="Select year"
