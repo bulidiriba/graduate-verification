@@ -17,7 +17,7 @@ export default function VerifyStudentForm() {
   const [institutionName, setInstitutionName] = useState('')
   const [institutionFullName, setInstitutionFullName] = useState('')
   const [ethiopianYear, setEthiopianYear] = useState("")
-  const [internationalYear, setInternationalYear] = useState("")
+  const [internationalYear, setInternationalYear] = useState(["", ""])
   const [qualification, setQualification] = useState("")
   const [filteredDestinations, setFilteredDestinations] = useState(Object.keys(institutions))
   const [filteredYear, setFilteredYear] = useState(Object.keys(year))
@@ -48,7 +48,7 @@ export default function VerifyStudentForm() {
       const queryParams = new URLSearchParams({
         name: studentFullName,
         institution: institutionName,
-        year: internationalYear,
+        year: internationalYear[0],
         qualification: qualification,
         token: token
       })
@@ -109,7 +109,7 @@ export default function VerifyStudentForm() {
 
   const handleSelectYear = (input: string) => {
     setEthiopianYear(year[input as keyof typeof year].Ethiopian)
-    setInternationalYear(year[input as keyof typeof year].International)
+    setInternationalYear([year[input as keyof typeof year].hemisCode, year[input as keyof typeof year].International])
     setOpenYear(false)
     yearInputRef.current?.blur()
   }
@@ -223,7 +223,7 @@ export default function VerifyStudentForm() {
                 <Input
                   ref={yearInputRef}
                   type="text"
-                  value={ethiopianYear}
+                  value={"Eth: "+ethiopianYear+" (Int: "+internationalYear[1]+")"}
                   onChange={(e) => handleYearChange(e.target.value)}
                   onFocus={() => setOpenYear(true)}
                   placeholder="Select year"
@@ -243,9 +243,9 @@ export default function VerifyStudentForm() {
                             onClick={() => handleSelectYear(value)}
                           >
                             <div className="flex flex-col">
-                              <span className="font-bold text-[16px]">{value}</span>
+                              <span className="font-bold text-[16px]">Ethiopia: {value}</span>
                               <span className="text-[14px] text-gray-600">
-                                {year[value as keyof typeof year].International}
+                                International: {year[value as keyof typeof year].International}
                               </span>
                             </div>
                           </button>
