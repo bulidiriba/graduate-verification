@@ -134,7 +134,7 @@ export default function VerifyStudentForm() {
     <>
       <Card className="bg-white shadow-lg rounded-lg overflow-hidden">
         <CardHeader className="p-6 bg-[#2F4D8A]">
-          <CardTitle className="text-2xl font-bold text-center text-white">Verify Student</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-white">Student Info</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
