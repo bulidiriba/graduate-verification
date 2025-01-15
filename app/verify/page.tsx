@@ -1,7 +1,6 @@
 "use client"
 
 import { Header } from '@/components/header'
-import { DocumentUpload } from '@/components/documentUpload'
 import VerifyStudentForm from '@/components/VerifyStudentForm'
 import { Footer } from '@/components/footer'
 import { useEffect, useState } from 'react'

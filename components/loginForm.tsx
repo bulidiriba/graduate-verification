@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from 'lucide-react'
@@ -14,7 +13,7 @@ import Cookies from 'js-cookie'
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
-    const [windowHeight, setWindowHeight] = useState(0)
+    const [_, setWindowHeight] = useState(0)
     const [windowWidth, setWindowWidth] = useState(0)
 
     useEffect(() => {
@@ -65,7 +64,7 @@ import Cookies from 'js-cookie'
         } else {
           throw new Error('No token received')
         }
-      } catch (err) {
+      } catch {
         setError('Invalid credentials or server error')
       } finally {
         setIsLoading(false)

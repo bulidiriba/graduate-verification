@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { Facebook, Send, Youtube, Twitter, Linkedin } from 'lucide-react'
 import { Button } from '@/components/ui/button'

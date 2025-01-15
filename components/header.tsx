@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { Mail, Phone, LogOut, Menu, X } from 'lucide-react'
+import { LogOut, Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'

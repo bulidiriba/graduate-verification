@@ -49,8 +49,7 @@ export async function GET(request: Request) {
     } else {
       return NextResponse.json({ exists: false })
     }
-  } catch (error) {
-    console.error('API request failed:', error)
+  } catch {
     return NextResponse.json({ error: 'Failed to verify student' }, { status: 500 })
   }
 }
