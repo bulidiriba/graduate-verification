@@ -68,7 +68,7 @@ export default function ResultContainer({ result, error }: ResultContainerProps)
                   </div>
                   <div className="flex items-center">
                     <User className="h-5 w-5 text-gray-400 mr-3" />
-                    <p><span className="font-semibold">National ID:</span> {result.student.studentNationalId}</p>
+                    <p><span className="font-semibold">Student National ID:</span> {result.student.studentNationalId}</p>
                   </div>
                   <div className="flex items-center">
                     <Award className="h-5 w-5 text-gray-400 mr-3" />
