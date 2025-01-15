@@ -155,7 +155,7 @@ export default function VerifyStudentForm() {
             <div className="space-y-2">
               <label htmlFor="studentFullName" className="text-sm font-medium text-gray-700 flex items-center">
                 <User className="w-4 h-4 mr-2" />
-                Student Full Name
+                Student Full Name <span className="text-red-500 ml-1">(∗)</span>
               </label>
               <Input
                 id="studentFullName"
@@ -170,7 +170,7 @@ export default function VerifyStudentForm() {
             <div className="space-y-2">
               <label htmlFor="institutionName" className="text-sm font-medium text-gray-700 flex items-center">
                 <Building className="w-4 h-4 mr-2" />
-                Institution Name
+                Institution Name <span className="text-red-500 ml-1">(∗)</span>
               </label>
               <div className="relative">
                 <Input
@@ -217,7 +217,7 @@ export default function VerifyStudentForm() {
             <div className="space-y-2">
               <label htmlFor="ethiopianYear" className="text-sm font-medium text-gray-700 flex items-center">
                 <Calendar className="w-4 h-4 mr-2" />
-                Year of Graduation
+                Year of Graduation <span className="text-red-500 ml-1">(∗)</span>
               </label>
               <div className="relative">
                 <Input
@@ -262,7 +262,7 @@ export default function VerifyStudentForm() {
             <div className="space-y-2">
               <label htmlFor="qualification" className="text-sm font-medium text-gray-700 flex items-center">
                 <GraduationCap className="w-4 h-4 mr-2" />
-                Qualification
+                Qualification <span className="text-red-500 ml-1">(∗)</span>
               </label>
               <Select value={qualification} onValueChange={setQualification}>
                 <SelectTrigger className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
