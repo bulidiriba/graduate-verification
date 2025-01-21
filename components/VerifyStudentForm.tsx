@@ -120,6 +120,13 @@ export default function VerifyStudentForm() {
     setIsYearSelected(false)
   }
 
+  const handleYearMouseOnLeave = (newValue: string) => {
+    setInternationalYear([
+      year[newValue as keyof typeof year].hemisCode,
+      year[newValue as keyof typeof year].International,
+    ])
+  }
+
   const filterYear = (input: string) => {
     const filtered = Object.keys(year).filter(
       (key) =>
@@ -145,7 +152,7 @@ export default function VerifyStudentForm() {
   }
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent) => { 
       if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
         // Do nothing for institution dropdown
       }
@@ -246,11 +253,12 @@ export default function VerifyStudentForm() {
                   type="text"
                   value={ethiopianYear}
                   onChange={(e) => handleYearChange(e.target.value)}
+                  onMouseLeave={() => handleYearMouseOnLeave(ethiopianYear)}
                   onFocus={() => setOpenYear(true)}
                   placeholder="Select year"
                   className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
                 />
-                {isYearSelected && (
+                  {isYearSelected && (
                   <button
                     type="button"
                     onClick={clearYear}
