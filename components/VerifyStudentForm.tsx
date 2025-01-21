@@ -1,21 +1,21 @@
-'use client'
+"use client"
 
-import { useState, useRef, useEffect } from 'react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
+import { useState, useRef, useEffect } from "react"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import institutions from "@/data/institutions.json"
 import year from "@/data/years.json"
 import qualificationsData from "@/data/qualifications.json"
-import { Loader2, Search, User, Building, GraduationCap, Calendar } from 'lucide-react'
+import { Loader2, Search, User, Building, GraduationCap, Calendar } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import ResultContainer from './ResultContainer'
+import ResultContainer from "./ResultContainer"
 
 export default function VerifyStudentForm() {
-  const [studentId, setStudentId] = useState('')
+  const [studentId, setStudentId] = useState("")
   const [studentFullName, setStudentFullName] = useState("")
-  const [institutionName, setInstitutionName] = useState('')
-  const [institutionFullName, setInstitutionFullName] = useState('')
+  const [institutionName, setInstitutionName] = useState("")
+  const [institutionFullName, setInstitutionFullName] = useState("")
   const [ethiopianYear, setEthiopianYear] = useState("")
   const [internationalYear, setInternationalYear] = useState(["", ""])
   const [qualification, setQualification] = useState("")
@@ -26,6 +26,7 @@ export default function VerifyStudentForm() {
   const [open, setOpen] = useState(false)
   const [openYear, setOpenYear] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [yearError, setYearError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const yearInputRef = useRef<HTMLInputElement>(null)
   const popoverRef = useRef<HTMLDivElement>(null)
@@ -36,10 +37,17 @@ export default function VerifyStudentForm() {
     setIsLoading(true)
     setError(null)
     setResult(null)
+    setYearError(null)
 
-    const token = localStorage.getItem('authToken');
+    if (!year.hasOwnProperty(ethiopianYear)) {
+      setYearError("The selected year doesn't exist.")
+      setIsLoading(false)
+      return
+    }
+
+    const token = localStorage.getItem("authToken")
     if (!token) {
-      setError('Authentication failed. Please login to continue.')
+      setError("Authentication failed. Please login to continue.")
       setIsLoading(false)
       return
     }
@@ -50,19 +58,19 @@ export default function VerifyStudentForm() {
         institution: institutionName,
         year: internationalYear[0],
         qualification: qualification,
-        token: token
+        token: token,
       })
       if (studentId) {
-        queryParams.append('studentNationalId', studentId)
+        queryParams.append("studentNationalId", studentId)
       }
       const response = await fetch(`/api/verify?${queryParams.toString()}`)
       if (!response.ok) {
-        throw new Error('Failed to verify graduates')
+        throw new Error("Failed to verify graduates")
       }
       const data = await response.json()
       setResult(data)
     } catch (err) {
-      setError('An error occurred while verifying the student. Please try again.')
+      setError("An error occurred while verifying the student. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -72,13 +80,13 @@ export default function VerifyStudentForm() {
     setInstitutionFullName(newValue)
     setOpen(true)
     filterDestinations(newValue)
-  } 
+  }
 
   const filterDestinations = (input: string) => {
-    const filtered = Object.keys(institutions).filter(key => {
+    const filtered = Object.keys(institutions).filter((key) => {
       const institution = institutions[key as keyof typeof institutions]
       return (
-        institution.shortName.toLowerCase().includes(input.toLowerCase()) || 
+        institution.shortName.toLowerCase().includes(input.toLowerCase()) ||
         institution.fullName.toLowerCase().includes(input.toLowerCase())
       )
     })
@@ -95,14 +103,23 @@ export default function VerifyStudentForm() {
 
   const handleYearChange = (newValue: string) => {
     setEthiopianYear(newValue)
+    setYearError(null)
     setOpenYear(true)
     filterYear(newValue)
-  } 
+  }
+
+  const handleYearMouseOnLeave = (newValue: string) => {
+    setInternationalYear([
+      year[newValue as keyof typeof year].hemisCode,
+      year[newValue as keyof typeof year].International,
+    ])
+  }
 
   const filterYear = (input: string) => {
-    const filtered = Object.keys(year).filter(key => 
-      key.toLowerCase().includes(input.toLowerCase()) || 
-      year[key as keyof typeof year].Ethiopian.toLowerCase().includes(input.toLowerCase())
+    const filtered = Object.keys(year).filter(
+      (key) =>
+        key.toLowerCase().includes(input.toLowerCase()) ||
+        year[key as keyof typeof year].Ethiopian.toLowerCase().includes(input.toLowerCase()),
     )
     setFilteredYear(filtered)
   }
@@ -124,9 +141,9 @@ export default function VerifyStudentForm() {
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
 
@@ -153,21 +170,6 @@ export default function VerifyStudentForm() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="studentFullName" className="text-sm font-medium text-gray-700 flex items-center">
-                <User className="w-4 h-4 mr-2" />
-                Graduate Full Name <span className="text-red-500 ml-1">(∗)</span>
-              </label>
-              <Input
-                id="studentFullName"
-                value={studentFullName}
-                onChange={(e) => setStudentFullName(e.target.value)}
-                placeholder="Enter graduate full name"
-                className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
               <label htmlFor="institutionName" className="text-sm font-medium text-gray-700 flex items-center">
                 <Building className="w-4 h-4 mr-2" />
                 Institution Name <span className="text-red-500 ml-1">(∗)</span>
@@ -183,10 +185,7 @@ export default function VerifyStudentForm() {
                   className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
                 />
                 {open && (
-                  <div 
-                    ref={popoverRef}
-                    className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg"
-                  >
+                  <div ref={popoverRef} className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg">
                     <div className="p-4 max-h-60 overflow-y-auto">
                       {filteredDestinations.length > 0 ? (
                         filteredDestinations.map((key) => (
@@ -223,17 +222,16 @@ export default function VerifyStudentForm() {
                 <Input
                   ref={yearInputRef}
                   type="text"
-                  value={"Eth: "+ethiopianYear+" (Int: "+internationalYear[1]+")" ? ethiopianYear : ""}
+                  value={ethiopianYear}
                   onChange={(e) => handleYearChange(e.target.value)}
+                  onMouseLeave={() => handleYearMouseOnLeave(ethiopianYear)}
                   onFocus={() => setOpenYear(true)}
                   placeholder="Select year"
                   className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
                 />
+                {yearError && <p className="text-red-500 text-sm mt-1">{yearError}</p>}
                 {openYear && (
-                  <div 
-                    ref={yearPopoverRef}
-                    className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg"
-                  >
+                  <div ref={yearPopoverRef} className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg">
                     <div className="p-4 max-h-60 overflow-y-auto">
                       {filteredYear.length > 0 ? (
                         filteredYear.map((value, index) => (
@@ -245,7 +243,10 @@ export default function VerifyStudentForm() {
                             <div className="flex flex-col">
                               <span className="font-bold text-[16px]">EC: {value}</span>
                               <span className="text-[14px] text-gray-600">
-                                GC: {year[value as keyof typeof year].International}/
+                                GC:{" "}
+                                {year[value as keyof typeof year].hemisCode.slice(0, 4) +
+                                  "/" +
+                                  year[value as keyof typeof year].hemisCode.slice(4)}
                               </span>
                             </div>
                           </button>
@@ -257,6 +258,21 @@ export default function VerifyStudentForm() {
                   </div>
                 )}
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="studentFullName" className="text-sm font-medium text-gray-700 flex items-center">
+                <User className="w-4 h-4 mr-2" />
+                Graduate Full Name <span className="text-red-500 ml-1">(∗)</span>
+              </label>
+              <Input
+                id="studentFullName"
+                value={studentFullName}
+                onChange={(e) => setStudentFullName(e.target.value)}
+                placeholder="Enter graduate full name"
+                className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
+                required
+              />
             </div>
 
             <div className="space-y-2">
