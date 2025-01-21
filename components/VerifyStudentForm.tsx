@@ -28,6 +28,7 @@ export default function VerifyStudentForm() {
   const [error, setError] = useState<string | null>(null)
   const [yearError, setYearError] = useState<string | null>(null)
   const [isInstitutionSelected, setIsInstitutionSelected] = useState(false)
+  const [isYearSelected, setIsYearSelected] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const yearInputRef = useRef<HTMLInputElement>(null)
   const popoverRef = useRef<HTMLDivElement>(null)
@@ -108,6 +109,7 @@ export default function VerifyStudentForm() {
     setInstitutionName("")
     setInstitutionFullName("")
     setIsInstitutionSelected(false)
+    setOpen(true)
   }
 
   const handleYearChange = (newValue: string) => {
@@ -115,13 +117,7 @@ export default function VerifyStudentForm() {
     setYearError(null)
     setOpenYear(true)
     filterYear(newValue)
-  }
-
-  const handleYearMouseOnLeave = (newValue: string) => {
-    setInternationalYear([
-      year[newValue as keyof typeof year].hemisCode,
-      year[newValue as keyof typeof year].International,
-    ])
+    setIsYearSelected(false)
   }
 
   const filterYear = (input: string) => {
@@ -137,13 +133,24 @@ export default function VerifyStudentForm() {
     setEthiopianYear(year[input as keyof typeof year].Ethiopian)
     setInternationalYear([year[input as keyof typeof year].hemisCode, year[input as keyof typeof year].International])
     setOpenYear(false)
+    setIsYearSelected(true)
     yearInputRef.current?.blur()
+  }
+
+  const clearYear = () => {
+    setEthiopianYear("")
+    setInternationalYear(["", ""])
+    setIsYearSelected(false)
+    setOpenYear(true)
   }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (yearPopoverRef.current && !yearPopoverRef.current.contains(event.target as Node)) {
-        setOpenYear(false)
+      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+        // Do nothing for institution dropdown
+      }
+      if (yearInputRef.current && !yearInputRef.current.contains(event.target as Node)) {
+        // Do nothing for year dropdown
       }
     }
 
@@ -239,11 +246,19 @@ export default function VerifyStudentForm() {
                   type="text"
                   value={ethiopianYear}
                   onChange={(e) => handleYearChange(e.target.value)}
-                  onMouseLeave={() => handleYearMouseOnLeave(ethiopianYear)}
                   onFocus={() => setOpenYear(true)}
                   placeholder="Select year"
                   className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
                 />
+                {isYearSelected && (
+                  <button
+                    type="button"
+                    onClick={clearYear}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                )}
                 {yearError && <p className="text-red-500 text-sm mt-1">{yearError}</p>}
                 {openYear && (
                   <div ref={yearPopoverRef} className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg">
