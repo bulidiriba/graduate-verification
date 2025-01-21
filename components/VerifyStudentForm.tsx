@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import institutions from "@/data/institutions.json"
 import year from "@/data/years.json"
 import qualificationsData from "@/data/qualifications.json"
-import { Loader2, Search, User, Building, GraduationCap, Calendar } from "lucide-react"
+import { Loader2, Search, User, Building, GraduationCap, Calendar, X } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import ResultContainer from "./ResultContainer"
 
@@ -27,6 +27,7 @@ export default function VerifyStudentForm() {
   const [openYear, setOpenYear] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [yearError, setYearError] = useState<string | null>(null)
+  const [isInstitutionSelected, setIsInstitutionSelected] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const yearInputRef = useRef<HTMLInputElement>(null)
   const popoverRef = useRef<HTMLDivElement>(null)
@@ -80,6 +81,7 @@ export default function VerifyStudentForm() {
     setInstitutionFullName(newValue)
     setOpen(true)
     filterDestinations(newValue)
+    setIsInstitutionSelected(false)
   }
 
   const filterDestinations = (input: string) => {
@@ -98,7 +100,14 @@ export default function VerifyStudentForm() {
     setInstitutionName(institution.shortName)
     setInstitutionFullName(institution.fullName)
     setOpen(false)
+    setIsInstitutionSelected(true)
     inputRef.current?.blur()
+  }
+
+  const clearInstitution = () => {
+    setInstitutionName("")
+    setInstitutionFullName("")
+    setIsInstitutionSelected(false)
   }
 
   const handleYearChange = (newValue: string) => {
@@ -133,9 +142,6 @@ export default function VerifyStudentForm() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
-        setOpen(false)
-      }
       if (yearPopoverRef.current && !yearPopoverRef.current.contains(event.target as Node)) {
         setOpenYear(false)
       }
@@ -184,6 +190,15 @@ export default function VerifyStudentForm() {
                   placeholder="Select institution"
                   className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
                 />
+                {isInstitutionSelected && (
+                  <button
+                    type="button"
+                    onClick={clearInstitution}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                )}
                 {open && (
                   <div ref={popoverRef} className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg">
                     <div className="p-4 max-h-60 overflow-y-auto">
