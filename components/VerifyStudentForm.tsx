@@ -34,8 +34,11 @@ export default function VerifyStudentForm() {
   const popoverRef = useRef<HTMLDivElement>(null)
   const yearPopoverRef = useRef<HTMLDivElement>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const verifyGraduate = async () => {
+    if (!institutionName || !internationalYear) {
+      return // Don't submit if required fields are missing
+    }
+
     setIsLoading(true)
     setError(null)
     setResult(null)
@@ -110,6 +113,7 @@ export default function VerifyStudentForm() {
     setInstitutionFullName("")
     setIsInstitutionSelected(false)
     setOpen(true)
+    setResult(null) // Clear the result when institution is cleared
   }
 
   const handleYearChange = (newValue: string) => {
@@ -119,7 +123,6 @@ export default function VerifyStudentForm() {
     filterYear(newValue)
     setIsYearSelected(false)
   }
-
   const handleYearMouseOnLeave = (newValue: string) => {
     setInternationalYear([
       year[newValue as keyof typeof year].hemisCode,
@@ -142,6 +145,7 @@ export default function VerifyStudentForm() {
     setOpenYear(false)
     setIsYearSelected(true)
     yearInputRef.current?.blur()
+    verifyGraduate() // Trigger verification after year selection
   }
 
   const clearYear = () => {
@@ -149,10 +153,11 @@ export default function VerifyStudentForm() {
     setInternationalYear(["", ""])
     setIsYearSelected(false)
     setOpenYear(true)
+    setResult(null) // Clear the result when year is cleared
   }
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => { 
+    const handleClickOutside = (event: MouseEvent) => {
       if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
         // Do nothing for institution dropdown
       }
@@ -174,7 +179,13 @@ export default function VerifyStudentForm() {
           <CardTitle className="text-2xl font-bold text-center text-white">Graduates Info</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              verifyGraduate()
+            }}
+            className="space-y-6"
+          >
             <div className="space-y-2">
               <label htmlFor="studentId" className="text-sm font-medium text-gray-700 flex items-center">
                 <User className="w-4 h-4 mr-2" />
@@ -183,7 +194,10 @@ export default function VerifyStudentForm() {
               <Input
                 id="studentId"
                 value={studentId}
-                onChange={(e) => setStudentId(e.target.value)}
+                onChange={(e) => {
+                  setStudentId(e.target.value)
+                  verifyGraduate()
+                }}
                 placeholder="Enter student national ID"
                 className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
               />
@@ -258,7 +272,7 @@ export default function VerifyStudentForm() {
                   placeholder="Select year"
                   className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
                 />
-                  {isYearSelected && (
+                {isYearSelected && (
                   <button
                     type="button"
                     onClick={clearYear}
@@ -306,7 +320,10 @@ export default function VerifyStudentForm() {
               <Input
                 id="studentFullName"
                 value={studentFullName}
-                onChange={(e) => setStudentFullName(e.target.value)}
+                onChange={(e) => {
+                  setStudentFullName(e.target.value)
+                  verifyGraduate()
+                }}
                 placeholder="Enter graduate full name"
                 className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
                 required
@@ -318,7 +335,13 @@ export default function VerifyStudentForm() {
                 <GraduationCap className="w-4 h-4 mr-2" />
                 Qualification <span className="text-red-500 ml-1">(∗)</span>
               </label>
-              <Select value={qualification} onValueChange={setQualification}>
+              <Select
+                value={qualification}
+                onValueChange={(value) => {
+                  setQualification(value)
+                  verifyGraduate()
+                }}
+              >
                 <SelectTrigger className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
                   <SelectValue placeholder="Select qualification" />
                 </SelectTrigger>
