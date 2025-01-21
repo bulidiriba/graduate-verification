@@ -28,7 +28,7 @@ export default function HomePage() {
       <Header />
       <div className="p-6 flex flex-col items-center">
         <div className="w-full max-w-7xl bg-white rounded-lg shadow-sm p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Verify Student Graduation Status</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Verify Graduation Status</h1>
         <p className="text-gray-700 mb-8 text-center max-w-3xl mx-auto">
             GVS enables you to verify graduates by entering the graduate’s full name, institution name, program, and other relevant information.
         </p>

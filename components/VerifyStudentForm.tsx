@@ -57,7 +57,7 @@ export default function VerifyStudentForm() {
       }
       const response = await fetch(`/api/verify?${queryParams.toString()}`)
       if (!response.ok) {
-        throw new Error('Failed to verify student')
+        throw new Error('Failed to verify graduates')
       }
       const data = await response.json()
       setResult(data)
@@ -134,7 +134,7 @@ export default function VerifyStudentForm() {
     <>
       <Card className="bg-white shadow-lg rounded-lg overflow-hidden">
         <CardHeader className="p-6 bg-[#2F4D8A]">
-          <CardTitle className="text-2xl font-bold text-center text-white">Student Info</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-white">Graduates Info</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -155,13 +155,13 @@ export default function VerifyStudentForm() {
             <div className="space-y-2">
               <label htmlFor="studentFullName" className="text-sm font-medium text-gray-700 flex items-center">
                 <User className="w-4 h-4 mr-2" />
-                Student Full Name <span className="text-red-500 ml-1">(∗)</span>
+                Graduate Full Name <span className="text-red-500 ml-1">(∗)</span>
               </label>
               <Input
                 id="studentFullName"
                 value={studentFullName}
                 onChange={(e) => setStudentFullName(e.target.value)}
-                placeholder="Enter student full name"
+                placeholder="Enter graduate full name"
                 className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
                 required
               />
@@ -243,9 +243,9 @@ export default function VerifyStudentForm() {
                             onClick={() => handleSelectYear(value)}
                           >
                             <div className="flex flex-col">
-                              <span className="font-bold text-[16px]">Ethiopia: {value}</span>
+                              <span className="font-bold text-[16px]">EC: {value}</span>
                               <span className="text-[14px] text-gray-600">
-                                International: {year[value as keyof typeof year].International}
+                                GC: {year[value as keyof typeof year].International}/
                               </span>
                             </div>
                           </button>
@@ -286,12 +286,12 @@ export default function VerifyStudentForm() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Verifying...
+                  Checking...
                 </>
               ) : (
                 <>
                   <Search className="mr-2 h-5 w-5" />
-                  Verify Student
+                  Verify Graduates
                 </>
               )}
             </Button>

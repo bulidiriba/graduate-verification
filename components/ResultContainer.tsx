@@ -49,12 +49,12 @@ export default function ResultContainer({ result, error }: ResultContainerProps)
                 {result.exists ? (
                   <div className="flex items-center justify-center text-green-600">
                     <CheckCircle2 className="mr-2 h-8 w-8" />
-                    Student Verified
+                    Verified
                   </div>
                 ) : (
                   <div className="flex items-center justify-center text-red-600">
                     <XCircle className="mr-2 h-8 w-8" />
-                    Student Not Found
+                    Not Found
                   </div>
                 )}
               </CardTitle>
@@ -108,7 +108,7 @@ export default function ResultContainer({ result, error }: ResultContainerProps)
                   </div>
                 </div>
               ) : (
-                <p className="text-center text-gray-600">No student found with the provided information.</p>
+                <p className="text-center text-gray-600">No graduates found with the provided information.</p>
               )}
             </CardContent>
           </Card>

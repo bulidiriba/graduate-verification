@@ -50,7 +50,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ exists: false })
     }
   } catch {
-    return NextResponse.json({ error: 'Failed to verify student' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to verify graduates' }, { status: 500 })
   }
 }
 

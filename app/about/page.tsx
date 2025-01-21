@@ -41,7 +41,7 @@ export default function AboutPage() {
           <ul className="list-disc list-inside space-y-2 text-gray-600 ml-4">
             <li>Maintaining accurate and up-to-date graduation records</li>
             <li>Providing quick and reliable verification services</li>
-            <li>Ensuring the security and privacy of student information</li>
+            <li>Ensuring the security and privacy of graduates information</li>
             <li>Supporting educational institutions in record-keeping</li>
             <li>Facilitating the authentication process for employers</li>
           </ul>
