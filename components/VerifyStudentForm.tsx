@@ -29,13 +29,15 @@ export default function VerifyStudentForm() {
   const [yearError, setYearError] = useState<string | null>(null)
   const [isInstitutionSelected, setIsInstitutionSelected] = useState(false)
   const [isYearSelected, setIsYearSelected] = useState(false)
+  const [studentNames, setStudentNames] = useState<string[]>([]) // Added state for student names
+  const [openStudentList, setOpenStudentList] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const yearInputRef = useRef<HTMLInputElement>(null)
+  const studentNameInputRef = useRef<HTMLInputElement>(null)
   const popoverRef = useRef<HTMLDivElement>(null)
-  const yearPopoverRef = useRef<HTMLDivElement>(null)
 
   const verifyGraduate = async () => {
-    if (!institutionName || !internationalYear) {
+    if (!institutionName || !internationalYear[0]) {
       return // Don't submit if required fields are missing
     }
 
@@ -45,7 +47,7 @@ export default function VerifyStudentForm() {
     setYearError(null)
 
     if (!year.hasOwnProperty(ethiopianYear)) {
-      setYearError("The selected year doesn't exist.")
+      setYearError("The selected year doesn't exist in our records.")
       setIsLoading(false)
       return
     }
@@ -59,21 +61,35 @@ export default function VerifyStudentForm() {
 
     try {
       const queryParams = new URLSearchParams({
-        name: studentFullName,
         institution: institutionName,
         year: internationalYear[0],
-        qualification: qualification,
         token: token,
       })
+      if (studentFullName) {
+        queryParams.append("name", studentFullName)
+      }
       if (studentId) {
         queryParams.append("studentNationalId", studentId)
       }
+      if (qualification) {
+        queryParams.append("qualification", qualification)
+      }
+
       const response = await fetch(`/api/verify?${queryParams.toString()}`)
       if (!response.ok) {
         throw new Error("Failed to verify graduates")
       }
       const data = await response.json()
-      setResult(data)
+
+      // Update studentNames with the received data
+      if (Array.isArray(data.allStudentNames)) {
+        setStudentNames(data.allStudentNames)
+      }
+
+      if(studentFullName) {
+        setResult({"exists": data.exists, "student": data.student})
+      }
+
     } catch (err) {
       setError("An error occurred while verifying the student. Please try again.")
     } finally {
@@ -123,12 +139,6 @@ export default function VerifyStudentForm() {
     filterYear(newValue)
     setIsYearSelected(false)
   }
-  const handleYearMouseOnLeave = (newValue: string) => {
-    setInternationalYear([
-      year[newValue as keyof typeof year].hemisCode,
-      year[newValue as keyof typeof year].International,
-    ])
-  }
 
   const filterYear = (input: string) => {
     const filtered = Object.keys(year).filter(
@@ -145,7 +155,6 @@ export default function VerifyStudentForm() {
     setOpenYear(false)
     setIsYearSelected(true)
     yearInputRef.current?.blur()
-    verifyGraduate() // Trigger verification after year selection
   }
 
   const clearYear = () => {
@@ -156,13 +165,27 @@ export default function VerifyStudentForm() {
     setResult(null) // Clear the result when year is cleared
   }
 
+  const handleStudentFullNameChange = (newValue: string) => {
+    setStudentFullName(newValue)
+    setOpenStudentList(true)
+  }
+
+  const handleSelectStudentName = (name: string) => {
+    setStudentFullName(name)
+    setOpenStudentList(false)
+  }
+
+  const filterStudentNames = (input: string) => {
+    return studentNames.filter((name) => name.toLowerCase().includes(input.toLowerCase()))
+  }
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
-        // Do nothing for institution dropdown
-      }
-      if (yearInputRef.current && !yearInputRef.current.contains(event.target as Node)) {
-        // Do nothing for year dropdown
+      if (studentNameInputRef.current && !studentNameInputRef.current.contains(event.target as Node)) {
+        const dropdownElement = document.querySelector(".student-name-dropdown")
+        if (dropdownElement && !dropdownElement.contains(event.target as Node)) {
+          setOpenStudentList(false)
+        }
       }
     }
 
@@ -172,13 +195,19 @@ export default function VerifyStudentForm() {
     }
   }, [])
 
+  useEffect(() => {
+    if (internationalYear[0] && institutionName) {
+      verifyGraduate()
+    }
+  }, [internationalYear, institutionName])
+
   return (
     <>
-      <Card className="bg-white shadow-lg rounded-lg overflow-hidden">
+      <Card className="bg-white shadow-lg rounded-lg overflow-visible relative z-20">
         <CardHeader className="p-6 bg-[#2F4D8A]">
           <CardTitle className="text-2xl font-bold text-center text-white">Graduates Info</CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-6" style={{ minHeight: "600px" }}>
           <form
             onSubmit={(e) => {
               e.preventDefault()
@@ -196,7 +225,6 @@ export default function VerifyStudentForm() {
                 value={studentId}
                 onChange={(e) => {
                   setStudentId(e.target.value)
-                  verifyGraduate()
                 }}
                 placeholder="Enter student national ID"
                 className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
@@ -257,6 +285,30 @@ export default function VerifyStudentForm() {
             </div>
 
             <div className="space-y-2">
+              <label htmlFor="qualification" className="text-sm font-medium text-gray-700 flex items-center">
+                <GraduationCap className="w-4 h-4 mr-2" />
+                Qualification <span className="text-red-500 ml-1">(∗)</span>
+              </label>
+              <Select
+                value={qualification}
+                onValueChange={(value) => {
+                  setQualification(value)
+                }}
+              >
+                <SelectTrigger className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
+                  <SelectValue placeholder="Select qualification" />
+                </SelectTrigger>
+                <SelectContent>
+                  {qualificationsData.qualifications.map((qual, index) => (
+                    <SelectItem key={index} value={qual}>
+                      {qual}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
               <label htmlFor="ethiopianYear" className="text-sm font-medium text-gray-700 flex items-center">
                 <Calendar className="w-4 h-4 mr-2" />
                 Year of Graduation <span className="text-red-500 ml-1">(∗)</span>
@@ -267,7 +319,6 @@ export default function VerifyStudentForm() {
                   type="text"
                   value={ethiopianYear}
                   onChange={(e) => handleYearChange(e.target.value)}
-                  onMouseLeave={() => handleYearMouseOnLeave(ethiopianYear)}
                   onFocus={() => setOpenYear(true)}
                   placeholder="Select year"
                   className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
@@ -283,7 +334,7 @@ export default function VerifyStudentForm() {
                 )}
                 {yearError && <p className="text-red-500 text-sm mt-1">{yearError}</p>}
                 {openYear && (
-                  <div ref={yearPopoverRef} className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg">
+                  <div ref={popoverRef} className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg">
                     <div className="p-4 max-h-60 overflow-y-auto">
                       {filteredYear.length > 0 ? (
                         filteredYear.map((value, index) => (
@@ -317,42 +368,38 @@ export default function VerifyStudentForm() {
                 <User className="w-4 h-4 mr-2" />
                 Graduate Full Name <span className="text-red-500 ml-1">(∗)</span>
               </label>
-              <Input
-                id="studentFullName"
-                value={studentFullName}
-                onChange={(e) => {
-                  setStudentFullName(e.target.value)
-                  verifyGraduate()
-                }}
-                placeholder="Enter graduate full name"
-                className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="qualification" className="text-sm font-medium text-gray-700 flex items-center">
-                <GraduationCap className="w-4 h-4 mr-2" />
-                Qualification <span className="text-red-500 ml-1">(∗)</span>
-              </label>
-              <Select
-                value={qualification}
-                onValueChange={(value) => {
-                  setQualification(value)
-                  verifyGraduate()
-                }}
-              >
-                <SelectTrigger className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm">
-                  <SelectValue placeholder="Select qualification" />
-                </SelectTrigger>
-                <SelectContent>
-                  {qualificationsData.qualifications.map((qual, index) => (
-                    <SelectItem key={index} value={qual}>
-                      {qual}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="relative">
+                <Input
+                  ref={studentNameInputRef}
+                  id="studentFullName"
+                  value={studentFullName}
+                  onChange={(e) => handleStudentFullNameChange(e.target.value)}
+                  onFocus={() => {
+                    setOpenStudentList(true)
+                  }}
+                  placeholder="Enter graduate full name"
+                  className="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm"
+                  required
+                />
+                {openStudentList && studentNames.length > 0 && (
+                  <div
+                    className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg student-name-dropdown"
+                    style={{ maxHeight: "300px", overflowY: "auto" }}
+                  >
+                    <div className="p-4">
+                      {filterStudentNames(studentFullName).map((name, index) => (
+                        <button
+                          key={index}
+                          className="flex w-full items-start gap-3 rounded-sm p-2 text-left hover:bg-gray-100"
+                          onClick={() => handleSelectStudentName(name)}
+                        >
+                          <span className="font-medium">{name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             <Button
