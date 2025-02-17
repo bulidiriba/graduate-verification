@@ -20,7 +20,7 @@ export default function VerifyStudentForm() {
   const [internationalYear, setInternationalYear] = useState(["", ""])
   const [qualification, setQualification] = useState("")
   const [filteredDestinations, setFilteredDestinations] = useState(Object.keys(institutions))
-  const [filteredYear, setFilteredYear] = useState(Object.keys(year))
+  const [filteredYear, setFilteredYear] = useState(Object.keys(year).reverse())
   const [result, setResult] = useState<{ exists: boolean; student?: any } | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [open, setOpen] = useState(false)
@@ -133,6 +133,7 @@ export default function VerifyStudentForm() {
   }
 
   const handleYearChange = (newValue: string) => {
+    console.log("year value: ", year)
     setEthiopianYear(newValue)
     setYearError(null)
     setOpenYear(true)
@@ -146,6 +147,7 @@ export default function VerifyStudentForm() {
         key.toLowerCase().includes(input.toLowerCase()) ||
         year[key as keyof typeof year].Ethiopian.toLowerCase().includes(input.toLowerCase()),
     )
+    console.log("filtered year", filtered)
     setFilteredYear(filtered)
   }
 
@@ -180,6 +182,7 @@ export default function VerifyStudentForm() {
   }
 
   useEffect(() => {
+    console.log("year: ", Object.keys(year))
     const handleClickOutside = (event: MouseEvent) => {
       if (studentNameInputRef.current && !studentNameInputRef.current.contains(event.target as Node)) {
         const dropdownElement = document.querySelector(".student-name-dropdown")
@@ -337,6 +340,7 @@ export default function VerifyStudentForm() {
                   <div ref={popoverRef} className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg">
                     <div className="p-4 max-h-60 overflow-y-auto">
                       {filteredYear.length > 0 ? (
+                        console.log("filtered year", filteredYear),
                         filteredYear.map((value, index) => (
                           <button
                             key={index}
