@@ -81,10 +81,12 @@ export default function ResultContainer({ result, error }: ResultContainerProps)
                 )}
               </CardTitle>
               <div>
-                <Button onClick={handleExportPdf} variant="outline" size="sm">
+                {result.exists && ( 
+                  <Button onClick={handleExportPdf} variant="outline" size="sm">
                   <FileDown className="h-4 w-4 mr-2" />
-                  Export PDF
-                </Button>
+                    Save Document
+                  </Button>
+                )}
               </div>
             </CardHeader>
             <CardContent>
