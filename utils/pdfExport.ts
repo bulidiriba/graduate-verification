@@ -108,7 +108,7 @@ export const exportToPdf = async (element: HTMLElement) => {
   pdf.text(verificationText2, 40, yOffset + 5)
 
   // Add verification stamp to the right of the text
-  pdf.addImage(stampImg, "PNG", 150, yOffset - 15, 30, 30)
+  pdf.addImage(stampImg, "PNG", 130, yOffset - 20, 50, 50)
 
   // Add ministry name at bottom
   yOffset += 20
