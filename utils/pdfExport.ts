@@ -30,15 +30,21 @@ export const exportToPdf = async (element: HTMLElement) => {
   pdf.addImage(img, "PNG", 85, 15, 30, 30)
 
   // Add title
+  pdf.setFontSize(10)
+  pdf.setTextColor(0, 0, 0)
+  pdf.setFont("helvetica", "bold")
+  pdf.text("FDRE", 100, 50, { align: "center" })
+
+  // Add title
   pdf.setFontSize(14)
   pdf.setTextColor(0, 0, 0)
   pdf.setFont("helvetica", "bold")
-  pdf.text("MINISTRY OF EDUCATION", 105, 55, { align: "center" })
+  pdf.text("MINISTRY OF EDUCATION", 100, 58, { align: "center" })
   // Add title
   // Add Amharic title
   pdf.setFontSize(14)
   pdf.setFont("helvetica", "normal")
-  pdf.text("ትምህርት ሚኒስቴር", 105, 65, { align: "center" })
+  //pdf.text("ትምህርት ሚኒስቴር", 105, 65, { align: "center" })
 
   // Add watermark
   pdf.addImage(watermarkDataUrl, "PNG", 35, 90, 140, 140)
