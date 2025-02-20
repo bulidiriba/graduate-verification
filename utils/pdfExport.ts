@@ -52,40 +52,56 @@ export const exportToPdf = async (element: HTMLElement) => {
   // Add "TO WHOM IT MAY CONCERN"
   pdf.setFontSize(14)
   pdf.setFont("helvetica", "bold")
-  pdf.text("TO WHOM IT MAY CONCERN", 105, 85, { align: "center" })
+  pdf.text("TO WHOM IT MAY CONCERN", 100, 80, { align: "center" })
 
   // Add subtitle
   pdf.setFontSize(12)
   pdf.setFont("helvetica", "normal")
-  pdf.text("This is a digital verification result", 105, 95, { align: "center" })
+  pdf.text("This is a digital verification result", 100, 90, { align: "center" })
 
   // Extract and add text content
   pdf.setFontSize(12)
-  let yOffset = 115
+  let yOffset = 110
   const labelX = 40
   const valueX = 120
+  const maxWidth = 80 // Maximum width for the value text
 
-  element.querySelectorAll("div").forEach((div) => {
+  const contentDivs = Array.from(element.querySelectorAll("div"))
+  for (const div of contentDivs) {
     const text = div.textContent?.trim()
     if (text) {
       const parts = text.split(":")
       if (parts.length === 2) {
+        const label = parts[0].trim() + ":"
+        const value = parts[1].trim()
+
         pdf.setFont("helvetica", "bold")
-        pdf.text(parts[0].trim() + ":", labelX, yOffset)
+        pdf.text(label, labelX, yOffset)
+
         pdf.setFont("helvetica", "normal")
-        pdf.text(parts[1].trim(), valueX, yOffset)
-        yOffset += 10
+        const lines = pdf.splitTextToSize(value, maxWidth)
+        pdf.text(lines, valueX, yOffset)
+
+        // Increase yOffset based on the number of lines
+        yOffset += 10 * Math.max(1, lines.length)
+
+        // Check if we need to add a new page
+        if (yOffset > 270) {
+          pdf.addPage()
+          yOffset = 20 // Reset yOffset for the new page
+        }
       }
     }
-  })
+  }
 
   // Add verification text at bottom with stamp on the right
-  yOffset = 250
+  yOffset = Math.max(yOffset, 250) // Ensure we don't overlap with content
   pdf.setFontSize(10)
 
   // Calculate text width for proper stamp positioning
-  const verificationText1 = "This printout document shows that the graduate has been digitally verified by the Ministry of Education."
-  const verificationText2 = "But its not valid for official use, you can verify online at gvs.ethernet.edu.et"
+  const verificationText1 =
+    "This printout document shows that the graduate has been digitally verified by the Ministry of Education"
+  const verificationText2 = "But its not valid for official use, you can verify online at gvs.ethernet.edu.et."
 
   // Add verification text (aligned left for better stamp placement)
   pdf.text(verificationText1, 40, yOffset)
@@ -98,7 +114,7 @@ export const exportToPdf = async (element: HTMLElement) => {
   yOffset += 20
   pdf.setFont("helvetica", "bold")
   pdf.text("Ministry of Education", 105, yOffset, { align: "center" })
- 
+
   // Add current date and time at the bottom of the page
   const now = new Date()
   const dateTimeString = now.toISOString() // This gives full precision including microseconds
