@@ -1,5 +1,4 @@
 import jsPDF from "jspdf"
-import "jspdf-autotable"
 
 export const exportToPdf = async (element: HTMLElement) => {
   const pdf = new jsPDF({
@@ -7,17 +6,6 @@ export const exportToPdf = async (element: HTMLElement) => {
     unit: "mm",
     format: "a4",
   })
-
-  // Load Amharic font locally
-  const fontName = "EthiopiRegular"
-  const fontPath = "/NotoSansEthiopic-Regular.ttf"
-
-  try {
-    await loadLocalFont(pdf, fontPath, fontName)
-  } catch (error) {
-    console.error("Failed to load Amharic font:", error)
-    // Fallback to default font if Amharic font fails to load
-  }
 
   // Create canvas for watermark effect
   const canvas = document.createElement("canvas")
@@ -55,17 +43,6 @@ export const exportToPdf = async (element: HTMLElement) => {
   // Add title
   // Add Amharic title
   pdf.setFontSize(14)
-  try {
-    pdf.setFont(fontName, "normal")
-    pdf.text("ትምህርት ሚኒስቴር", 105, 65, { align: "center" })
-  } catch (error) {
-    console.error("Failed to use Amharic font:", error)
-    // Fallback to default font if Amharic font fails
-    pdf.setFont("helvetica", "normal")
-    pdf.text("Ministry of Education", 105, 65, { align: "center" })
-  }
-
-  // Reset font to default for other text
   pdf.setFont("helvetica", "normal")
   //pdf.text("ትምህርት ሚኒስቴር", 105, 65, { align: "center" })
 
@@ -88,10 +65,7 @@ export const exportToPdf = async (element: HTMLElement) => {
   const labelX = 40
   const valueX = 120
   const maxWidth = 80 // Maximum width for the value text
-  const maxWidth = 80 // Maximum width for the value text
 
-  const contentDivs = Array.from(element.querySelectorAll("div"))
-  for (const div of contentDivs) {
   const contentDivs = Array.from(element.querySelectorAll("div"))
   for (const div of contentDivs) {
     const text = div.textContent?.trim()
@@ -101,12 +75,7 @@ export const exportToPdf = async (element: HTMLElement) => {
         const label = parts[0].trim() + ":"
         const value = parts[1].trim()
 
-        const label = parts[0].trim() + ":"
-        const value = parts[1].trim()
-
         pdf.setFont("helvetica", "bold")
-        pdf.text(label, labelX, yOffset)
-
         pdf.text(label, labelX, yOffset)
 
         pdf.setFont("helvetica", "normal")
@@ -121,31 +90,15 @@ export const exportToPdf = async (element: HTMLElement) => {
           pdf.addPage()
           yOffset = 20 // Reset yOffset for the new page
         }
-        const lines = pdf.splitTextToSize(value, maxWidth)
-        pdf.text(lines, valueX, yOffset)
-
-        // Increase yOffset based on the number of lines
-        yOffset += 10 * Math.max(1, lines.length)
-
-        // Check if we need to add a new page
-        if (yOffset > 270) {
-          pdf.addPage()
-          yOffset = 20 // Reset yOffset for the new page
-        }
       }
     }
-  }
   }
 
   // Add verification text at bottom with stamp on the right
   yOffset = Math.max(yOffset, 250) // Ensure we don't overlap with content
-  yOffset = Math.max(yOffset, 250) // Ensure we don't overlap with content
   pdf.setFontSize(10)
 
   // Calculate text width for proper stamp positioning
-  const verificationText1 =
-    "This printout document shows that the graduate has been digitally verified by the Ministry of Education"
-  const verificationText2 = "But its not valid for official use, you can verify online at gvs.ethernet.edu.et."
   const verificationText1 =
     "This printout document shows that the graduate has been digitally verified by the Ministry of Education"
   const verificationText2 = "But its not valid for official use, you can verify online at gvs.ethernet.edu.et."
@@ -162,7 +115,6 @@ export const exportToPdf = async (element: HTMLElement) => {
   pdf.setFont("helvetica", "bold")
   pdf.text("Ministry of Education", 105, yOffset, { align: "center" })
 
-
   // Add current date and time at the bottom of the page
   const now = new Date()
   const dateTimeString = now.toISOString() // This gives full precision including microseconds
@@ -174,6 +126,7 @@ export const exportToPdf = async (element: HTMLElement) => {
   pdf.save("Graduate_Verification_Result.pdf")
 }
 
+
 // Helper function to load images
 const loadImage = (url: string): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
@@ -183,22 +136,5 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
     img.onerror = reject
     img.src = url
   })
-}
-
-// Helper function to load local font
-const loadLocalFont = async (pdf: jsPDF, fontPath: string, fontName: string): Promise<void> => {
-  try {
-    const response = await fetch(fontPath)
-    if (!response.ok) {
-      throw new Error(`Failed to fetch font: ${response.statusText}`)
-    }
-    const fontArrayBuffer = await response.arrayBuffer()
-    const fontBase64 = btoa(String.fromCharCode(...new Uint8Array(fontArrayBuffer)))
-    pdf.addFileToVFS(`${fontName}.ttf`, fontBase64)
-    pdf.addFont(`${fontName}.ttf`, fontName, "normal")
-  } catch (error) {
-    console.error("Error loading local font:", error)
-    throw error
-  }
 }
 
