@@ -47,8 +47,8 @@ export default function ContactPage() {
             <h2 className="text-xl font-semibold mb-2">Email</h2>
             <p className="text-gray-600 mb-4">You can email us on anything you want</p>
             <div className="space-y-1">
+              <p className="text-gray-800">info@ethernet.edu.et</p>
               <p className="text-gray-800">info@moe.gov.et</p>
-              <p className="text-gray-800">mofi@gmail.com</p>
             </div>
           </div>
 

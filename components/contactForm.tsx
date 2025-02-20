@@ -18,7 +18,7 @@ export default function ContactForm() {
     setIsSubmitting(false)
     
     // Reset form
-    e.currentTarget.reset()
+    //e.currentTarget.reset()
   }
 
   return (

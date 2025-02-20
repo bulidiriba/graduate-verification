@@ -16,23 +16,23 @@ export function Footer() {
               FDRE Ministry of Education is a Governmental Organization Headquartered in Arada sub-city, Addis Ababa, Ethiopia
             </p>
             <div className="flex space-x-4 pt-4">
-              <Link href="https://facebook.com" className="text-[#1877F2] hover:opacity-80 transition-opacity">
+              <Link href="https://web.facebook.com/fdremoe/?_rdc=1&_rdr#" className="text-[#1877F2] hover:opacity-80 transition-opacity">
                 <Facebook size={24} />
                 <span className="sr-only">Facebook</span>
               </Link>
-              <Link href="https://t.me" className="text-[#0088cc] hover:opacity-80 transition-opacity">
+              <Link href="https://t.me/ethio_moe" className="text-[#0088cc] hover:opacity-80 transition-opacity">
                 <Send size={24} />
                 <span className="sr-only">Telegram</span>
               </Link>
-              <Link href="https://youtube.com" className="text-[#FF0000] hover:opacity-80 transition-opacity">
+              <Link href="https://www.youtube.com/@fdreministryofeducationeth8699" className="text-[#FF0000] hover:opacity-80 transition-opacity">
                 <Youtube size={24} />
                 <span className="sr-only">YouTube</span>
               </Link>
-              <Link href="https://twitter.com" className="text-[#1DA1F2] hover:opacity-80 transition-opacity">
+              <Link href="https://x.com/fdremoe?mx=2" className="text-[#1DA1F2] hover:opacity-80 transition-opacity">
                 <Twitter size={24} />
                 <span className="sr-only">Twitter</span>
               </Link>
-              <Link href="https://linkedin.com" className="text-[#0A66C2] hover:opacity-80 transition-opacity">
+              <Link href="https://www.linkedin.com/company/ministry-of-education-ethiopia" className="text-[#0A66C2] hover:opacity-80 transition-opacity">
                 <Linkedin size={24} />
                 <span className="sr-only">LinkedIn</span>
               </Link>

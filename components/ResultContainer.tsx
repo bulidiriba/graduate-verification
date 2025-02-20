@@ -84,7 +84,7 @@ export default function ResultContainer({ result, error }: ResultContainerProps)
                 {result.exists && ( 
                   <Button onClick={handleExportPdf} variant="outline" size="sm">
                   <FileDown className="h-4 w-4 mr-2" />
-                    Save Document
+                    Print as Document
                   </Button>
                 )}
               </div>
