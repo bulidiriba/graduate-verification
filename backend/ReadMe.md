@@ -52,3 +52,61 @@ From postman
     "university": "Adama University",
     "year": 2024
 }
+
+
+## Sample Request to generate moe credential key for each key
+POST /moe/generate_keys_for_university
+
+{
+  "university": "Addis Ababa University",
+  "year": 2025
+}
+
+
+
+result
+
+{
+  "university": "Addis Ababa University",
+  "year": 2025,
+  "moe_public_key": "...",         // Used by university to derive its private key
+  "moe_signature_key": "..."       // Used by university to sign graduate data
+}
+
+
+## Sample Request to generate private key for the university
+POST /university/generate_private_key
+
+{
+  "moe_public_key": "..."
+}
+
+result
+
+{
+  "university_private_key": "..."
+}
+
+
+## Sample Request to add or sign graduate
+POST /university/sign_graduate
+
+
+{
+  "graduate_data": {
+    "name": "Alice Smith",
+    "degree": "BSc CS",
+    "year": 2025
+  },
+  "university_private_key": "...",
+  "moe_signature_key": "..."
+}
+
+
+result
+
+{
+  "graduate_signature": "..."
+}
+
+
