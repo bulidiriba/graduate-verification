@@ -37,9 +37,6 @@ def add_graduate():
     graduate_data = request.json['data']
     signature = request.json['signature']
 
-    # print("current universities: ", universities)
-    print("public key: ", universities[university]['public_key'].encode())
-
     if university not in universities:
         return jsonify({"error": "University not found"}), 400
 
@@ -65,31 +62,36 @@ def add_graduate():
     except Exception as e:
         return jsonify({"error": "Signature verification failed", "details": str(e)}), 400
 
-# Endpoint: Verify a graduate
-@app.route('/verify_graduate/<grad_id>', methods=['GET'])
-def verify_graduate(grad_id):
-    record = graduate_records.get(grad_id)
-    if not record:
-        return jsonify({"error": "Graduate not found"}), 404
+# Endpoint: Verify graduate by details
+@app.route('/verify_graduate', methods=['POST'])
+def verify_graduate_by_details():
+    name = request.json['name']
+    university = request.json['university']
+    year = request.json['year']
 
-    public_key = serialization.load_pem_public_key(
-        universities[record['university']]['public_key'].encode(),
-        backend=default_backend()
-    )
+    for record in graduate_records.values():
+        data = record['data']
+        if (
+            data.get('name') == name and
+            data.get('year') == year and
+            record['university'] == university
+        ):
+            public_key = serialization.load_pem_public_key(
+                universities[university]['public_key'].encode(),
+                backend=default_backend()
+            )
+            try:
+                public_key.verify(
+                    base64.b64decode(record['signature'].encode()),
+                    json.dumps(record['data']).encode(),
+                    padding.PKCS1v15(),
+                    hashes.SHA256()
+                )
+                return jsonify({"valid": True, "graduate": record['data'], "university": university})
+            except:
+                return jsonify({"valid": False, "error": "Signature invalid"})
 
-    try:
-        public_key.verify(
-            base64.b64decode(record['signature'].encode()),
-            json.dumps(record['data']).encode(),
-            padding.PKCS1v15(),
-            hashes.SHA256()
-        )
-        return jsonify({"valid": True, "graduate": record['data'], "university": record['university']})
-    except:
-        return jsonify({"valid": False, "error": "Signature invalid"})
+    return jsonify({"error": "Graduate not found"}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-# 
