@@ -7,9 +7,11 @@ from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.backends import default_backend
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # Import Flask-CORS
 import os
 
 app = Flask(__name__)
+CORS(app)  # Allow all origins by default
 
 # In-memory stores (simulate DBs)
 universities = {}
@@ -127,10 +129,10 @@ def university_sign_graduates():
     graduate_list = request.json['graduates']  # Expecting a list of graduate data dicts
     #university_private_key_pem = request.json['university_private_key']
     # For now am I've saved the private key to json and loading from there for testing purpose, instead of always copy pasting
-    university = request.json['university']
+    university = request.json['institution_name']
     year = str(request.json['year'])
     #moe_signature_key = request.json['moe_signature_key']
-    moe_signature_key = request.json['moe_signature_key']
+    moe_signature_key = "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A="
 
     # Load private key from temp file
     with open(TEMP_UNIV_PRIVATE_KEY, "r") as f:

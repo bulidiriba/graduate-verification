@@ -92,13 +92,39 @@ export default function ImportGraduatesPage() {
     setIsProcessing(true)
 
     try {
-      // In a real application, you would send the processed data to your API
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      // Format the data according to the specified structure
+      const payload = {
+        graduates: previewData,
+        institution_name: previewData[0]?.institutionName || "",
+        year: year,
+      }
+
+      // Send the data to the external API
+      const response = await fetch("http://127.0.0.1:5000/university/sign_graduate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `Failed to import graduates: ${response.status} ${response.statusText}`)
+      }
+
+      const result = await response.json()
+
+      // Show success message
+      setSuccessMessage(`Successfully imported ${result.count || previewData.length} graduates.`)
 
       // Redirect to graduates list after successful import
-      router.push("/admin/graduates")
+      setTimeout(() => {
+        router.push("/admin/graduates")
+      }, 1500)
     } catch (error) {
-      setErrors(["Failed to import the data. Please try again."])
+      console.error("Error importing graduates:", error)
+      setErrors([error instanceof Error ? error.message : "Failed to import the data. Please try again."])
       setIsProcessing(false)
     }
   }
