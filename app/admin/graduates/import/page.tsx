@@ -12,10 +12,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Header } from "@/components/header"
+import { parseExcelFile } from "@/utils/excelParser"
+import { validateGraduateRecords, type ValidationResult } from "@/utils/validation"
 
 // Generate years from 2010 to current year
 const currentYear = new Date().getFullYear()
 const years = Array.from({ length: currentYear - 2010 + 1 }, (_, i) => 2010 + i)
+
+// Add this function after the existing imports but before the component definition
+const handleDownloadTemplate = () => {
+  // Create a link element
+  const link = document.createElement("a")
+  link.href = "/studentgraduate.xlsx"
+  link.download = "graduate_template.xlsx"
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
 
 export default function ImportGraduatesPage() {
   const router = useRouter()
@@ -26,7 +39,9 @@ export default function ImportGraduatesPage() {
   const [previewData, setPreviewData] = useState<any[] | null>(null)
   const [errors, setErrors] = useState<string[]>([])
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [validationResults, setValidationResults] = useState<Map<any, ValidationResult>>(new Map())
 
+  // Then replace the handleUpload function with this implementation that actually parses the Excel file
   const handleUpload = async () => {
     if (!file || !year) {
       setErrors(["Please select both a year and an Excel file"])
@@ -37,56 +52,34 @@ export default function ImportGraduatesPage() {
     setIsUploading(true)
 
     try {
-      // In a real application, you would send the file to your API
-      // Here we're simulating the process
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      // Parse the actual Excel file
+      const graduateRecords = await parseExcelFile(file)
 
-      // Simulate parsing the Excel file and getting preview data
-      const mockPreviewData = [
-        {
-          studentNationalId: "1234567890",
-          studentFullName: "John Doe",
-          yearOfGraduation: Number.parseInt(year),
-          endDate: `${year}-05-15`,
-          obtainedCertificate: "Bachelor of Science in Computer Science",
-          institutionName: "University of Technology",
-          institutionCountry: "Ethiopia",
-          isAccredited: true,
-          cgpa: 3.8,
-          qualification: "Bachelor's Degree",
-          studyProgram: "Computer Science",
-        },
-        {
-          studentNationalId: "2345678901",
-          studentFullName: "Jane Smith",
-          yearOfGraduation: Number.parseInt(year),
-          endDate: `${year}-06-20`,
-          obtainedCertificate: "Master of Business Administration",
-          institutionName: "Global Business School",
-          institutionCountry: "Ethiopia",
-          isAccredited: true,
-          cgpa: 3.9,
-          qualification: "Master's Degree",
-          studyProgram: "Business Administration",
-        },
-        {
-          studentNationalId: "3456789012",
-          studentFullName: "Ahmed Al-Mansour",
-          yearOfGraduation: Number.parseInt(year),
-          endDate: `${year}-07-10`,
-          obtainedCertificate: "Bachelor of Arts in Psychology",
-          institutionName: "Midwest University",
-          institutionCountry: "Ethiopia",
-          isAccredited: true,
-          cgpa: 3.5,
-          qualification: "Bachelor's Degree",
-          studyProgram: "Psychology",
-        },
-      ]
+      // Add the selected year to each record if not already present
+      const recordsWithYear = graduateRecords.map((record) => ({
+        ...record,
+        yearOfGraduation: record.yearOfGraduation || Number.parseInt(year),
+      }))
 
-      setPreviewData(mockPreviewData)
-      setSuccessMessage("Excel file processed successfully. Please review the data before importing.")
+      // Validate the data
+      const { validRecords, invalidRecords, warningRecords, validationResults } =
+        validateGraduateRecords(recordsWithYear)
+
+      // If there are invalid records, show errors
+      if (invalidRecords.length > 0) {
+        setErrors([`${invalidRecords.length} records have validation errors and cannot be imported.`])
+        // Still show the preview with all records
+        setPreviewData(recordsWithYear)
+      } else {
+        setPreviewData(recordsWithYear)
+        setSuccessMessage(
+          `Excel file processed successfully. Found ${recordsWithYear.length} records. Please review the data before importing.`,
+        )
+      }
+
+      setValidationResults(validationResults)
     } catch (error) {
+      console.error("Error processing Excel file:", error)
       setErrors(["Failed to process the Excel file. Please check the file format and try again."])
     } finally {
       setIsUploading(false)
@@ -200,7 +193,7 @@ export default function ImportGraduatesPage() {
                         </ul>
                       </div>
                       <div className="mt-3">
-                        <Button variant="outline" size="sm" className="bg-white">
+                        <Button variant="outline" size="sm" className="bg-white" onClick={handleDownloadTemplate}>
                           <FileSpreadsheet className="h-4 w-4 mr-2" />
                           Download Template
                         </Button>
@@ -210,7 +203,7 @@ export default function ImportGraduatesPage() {
                 </div>
               </>
             ) : (
-              <ImportPreview data={previewData} />
+              <ImportPreview data={previewData} validationResults={validationResults} />
             )}
           </CardContent>
           <CardFooter className="flex justify-between">
@@ -259,4 +252,3 @@ export default function ImportGraduatesPage() {
     </main>
   )
 }
-
