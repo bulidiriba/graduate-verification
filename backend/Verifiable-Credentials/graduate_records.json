@@ -1,11 +1,22 @@
 {
-  "Addis Ababa University": {
-    "year": "2025",
-    "data": {
-      "name": "Alice Smith",
-      "degree": "BSc CS"
+  "Addis Ababa University": [
+    {
+      "year": "2025",
+      "data": {
+        "name": "Alice Smith",
+        "degree": "BSc CS"
+      },
+      "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
+      "signature": "owjS+i2Cqu+3sUC4tod7EUFcYHONFzDKKlF1QDLBzxzd4OENwksblbGAvMBWGImOTwnQ8zHT5RGOtE/tcVKbkCt8PiUe+F/fuE7cWutx71OEYlxQJV7+PKtmv8hbBcGgl7iSFv0fDMK3FoZx4sliT5/CZdyfzw9U1zvQnwwbDKFAf6DFBwYUxJK4NbhzSFrJQc293djUcy411OolWsPbx3ENCLMyEyU8UvXjR3jsfhMIJRe891dM/2CwrKRUrzVrviSfm0Q9oBYr8s70uhEs1t91Zod8bHR91jdVr5iWkglVqQLq6sQIyqm8HR34qH7Z/rF2HDISL9pB3LRoTqrqcA=="
     },
-    "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
-    "signature": "X3QqQNlX0vEjYScmiIC/dN545c3na/6dQHM5D4DjvE6CwOEsPQlnXuQHfN6BTCSmSDaeMtZ0AabsQ9VdRjJDgNc051VeylQzVKPpaCN/9LpsZxbT+xLen24rONNl6we5Gpx8HXN42z2hwFCzKnHWQa0oals3O4IuTr5NzBec/icnKPqCo9J0Kf2+Yk7n7oGokMOJjS4Zfmmy+o5hMM+ZYkaU7h7PiB5Qpn3pUWx5ugsMdZjyF5qr1LbG7XltbcRFodMjIoS5+eWwK/MRAVzgKvd/8A3Y1JWItzL9JXGIKovnbbzpPHY+2slW9QMF5s8w/XoIL0uZWTBVr5mc/xu1qA=="
-  }
+    {
+      "year": "2025",
+      "data": {
+        "name": "John Doe",
+        "degree": "BA Economics"
+      },
+      "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
+      "signature": "jOCAyNcLF9ab8g8h0QJnVcoxuueY+IXhGffXeyVP9EJh4HLeMex8iH8cQAWVCAKrRJGzOMzM9Pt+ZInxpkniTV5PjbiPu9aBLbZ4cOcaFQ2X4FEaJTKYK6c2/bJiLDoKfCDNgZKF2zdu4yC+mA6Hoa18QsYdqP1gGjtu6Cn95dDA+l78XzJVITPEhT4McvnB+7meJovrpoWd6PdedrKRztelI4n9AWdJBv+eyJLMeEeic0s+y/+5Yhx9hbTSIih5JCNTJq90PWE2N0YBf+Ixgqjsqe49w7UvJvu5f7MXiFkNpY6/Q+kq+DT2WMw5J7nOYFmC4lL98TPhS/QnCVIoFg=="
+    }
+  ]
 }
