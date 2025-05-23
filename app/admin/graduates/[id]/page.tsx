@@ -57,6 +57,8 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
   const [files, setFiles] = useState<File[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [isReplacing, setIsReplacing] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [apiResponse, setApiResponse] = useState<any>(null)
 
   // Fetch graduate data
   useEffect(() => {
@@ -132,6 +134,16 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
     return data.studentNationalId?.toString() || data.studentFullName || data.name || "Unknown"
   }
 
+  // Helper function to get graduate national ID - always returns a string, empty if not available
+  const getGraduateNationalId = (): string => {
+    if (!graduate) return ""
+    const data = graduate.data as any
+
+    // If studentNationalId exists and is not null/undefined, convert to string
+    // Otherwise return empty string
+    return data.studentNationalId ? data.studentNationalId.toString() : ""
+  }
+
   // Handle input change for editing
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -188,20 +200,64 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
     if (!graduate || files.length === 0) return
 
     setIsUploading(true)
+    setUploadProgress(0)
+    setApiResponse(null)
+
     try {
-      // In a real implementation, you would upload the certificate via API
-      // For now, we'll just simulate a successful upload
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const formData = new FormData()
+
+      // Add the required fields to the FormData
+      formData.append("university", "Addis Ababa University")
+      formData.append("name", getGraduateName())
+
+      // Always send a string for national_id, empty if not available
+      formData.append("national_id", getGraduateNationalId())
+
+      // Append the file with the correct field name
+      formData.append("certificate", files[0], files[0].name)
+
+      // Log the FormData entries for debugging
+      for (const pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`)
+      }
+
+      // Use fetch API for simpler debugging
+      const response = await fetch("http://127.0.0.1:5000/upload_certificate", {
+        method: "POST",
+        body: formData,
+        // Don't set Content-Type header, browser will set it with boundary
+      })
+
+      // Get the response text
+      const responseText = await response.text()
+      console.log("API Response:", responseText)
+
+      // Try to parse as JSON if possible
+      let responseData
+      try {
+        responseData = JSON.parse(responseText)
+      } catch (e) {
+        responseData = { message: responseText || "Certificate uploaded" }
+      }
+
+      setApiResponse(responseData)
+
+      if (!response.ok) {
+        throw new Error(`Upload failed with status ${response.status}: ${response.statusText}\n${responseText}`)
+      }
+
+      // Create a local URL for preview (in a real app, you'd use the URL from the API response)
+      const certificateUrl = URL.createObjectURL(files[0])
 
       // Update the graduate state with the certificate URL
       setGraduate({
         ...graduate,
-        certificateUrl: URL.createObjectURL(files[0]), // This is just for demo purposes
+        certificateUrl: certificateUrl,
       })
 
       toast({
         title: "Success",
-        description: "Certificate uploaded successfully",
+        description: responseData.message || "Certificate uploaded successfully",
       })
 
       // Reset the replacing state if we were replacing a certificate
@@ -210,12 +266,16 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
       console.error("Error uploading certificate:", error)
       toast({
         title: "Error",
-        description: "Failed to upload certificate",
+        description: error instanceof Error ? error.message : "Failed to upload certificate",
         variant: "destructive",
       })
     } finally {
       setIsUploading(false)
-      setFiles([])
+      setUploadProgress(100) // Set to 100% when done
+      // Don't clear files on error so user can try again
+      if (!apiResponse || !apiResponse.error) {
+        setFiles([])
+      }
     }
   }
 
@@ -573,6 +633,29 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
                         }}
                         maxSizeInMB={10}
                       />
+
+                      {isUploading && (
+                        <div className="mt-4">
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm font-medium">Uploading...</span>
+                            <span className="text-sm font-medium">{uploadProgress}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2.5">
+                            <div
+                              className="bg-blue-600 h-2.5 rounded-full"
+                              style={{ width: `${uploadProgress}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Display API response for debugging */}
+                      {apiResponse && (
+                        <div className="mt-4 p-3 bg-gray-50 border rounded-md">
+                          <h4 className="text-sm font-medium mb-1">API Response:</h4>
+                          <pre className="text-xs overflow-auto max-h-32">{JSON.stringify(apiResponse, null, 2)}</pre>
+                        </div>
+                      )}
 
                       <div className="flex justify-end space-x-2 mt-4">
                         {isReplacing && (
