@@ -8,6 +8,9 @@ from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.backends import default_backend
 from flask import Flask, request, jsonify
 from flask_cors import CORS  # Import Flask-CORS
+from werkzeug.utils import secure_filename
+from flask import send_file
+import glob
 import os
 
 app = Flask(__name__)
@@ -18,6 +21,7 @@ universities = {}
 UNIVERSITY_REGISTRY_NAME = "university_registry.json"
 GRADUATE_RECORD_FILE = "graduate_records.json"
 TEMP_UNIV_PRIVATE_KEY= "temp_univ_private_key.json"
+CERTIFICATE_DIR = "certificates"
 
 # Simulate MoE signing a university public key
 def moe_sign_data(data):
@@ -302,5 +306,70 @@ def verify_graduate():
     except Exception as e:
         return jsonify({"valid": False, "error": "Signature invalid", "details": str(e)}), 400
 
+@app.route('/upload_certificate', methods=['POST'])
+def upload_certificate():
+    university = request.form.get('university')
+    name = request.form.get('name')
+    national_id = request.form.get('national_id')  # This can now be optional
+    file = request.files.get('certificate')
+
+    if not all([university, name, file]):
+        return jsonify({"error": "Missing required fields: university, name, or certificate"}), 400
+
+    try:
+        # Create a filename, excluding national_id if it's not provided
+        filename_parts = [university.strip().replace(" ", "_"),
+                          name.strip().replace(" ", "_")]
+        if national_id:
+            filename_parts.append(national_id.strip())
+
+        filename_parts.append(file.filename)
+        filename = secure_filename("_".join(filename_parts))
+        filepath = os.path.join(CERTIFICATE_DIR, filename)
+
+        file.save(filepath)
+
+        return jsonify({
+            "message": "Certificate uploaded successfully",
+            "filename": filename
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "error": "Failed to upload certificate",
+            "details": str(e)
+        }), 500
+    
+
+@app.route('/get_certificate', methods=['GET'])
+def get_certificate():
+    university = request.args.get('university')
+    name = request.args.get('name')
+    national_id = request.args.get('national_id')  # This can be optional
+
+    if not university or not name:
+        return jsonify({"error": "Missing university or name"}), 400
+
+    # Build base filename parts
+    base_parts = [university.strip().replace(" ", "_"),
+                  name.strip().replace(" ", "_")]
+
+    if national_id:
+        base_parts.append(national_id.strip())
+
+    base_pattern = "_".join(base_parts)
+    search_pattern = os.path.join(CERTIFICATE_DIR, f"{base_pattern}_*")
+
+    # Search for matching file(s)
+    matching_files = glob.glob(search_pattern)
+    if not matching_files:
+        return jsonify({"error": "Certificate not found"}), 404
+
+    try:
+        return send_file(matching_files[0], as_attachment=True)
+    except Exception as e:
+        return jsonify({"error": "Failed to send certificate", "details": str(e)}), 500
+    
+    
 if __name__ == '__main__':
     app.run(debug=True)
