@@ -82,7 +82,7 @@ export default function ImportGraduatesPage() {
       if (!response.ok) {
         throw new Error(data.error || `Failed to generate key pairs: ${response.status} ${response.statusText}`)
       }
-      console.log("data: ", data)
+
       // Set the private key from the response
       if (data.university_private_key) {
         setPrivateKey(data.university_private_key)
@@ -175,7 +175,7 @@ export default function ImportGraduatesPage() {
         moe_signature_key: moeSignatureKey,
         university_private_key: privateKey,
       }
-      
+
       // Send the data to the external API
       const response = await fetch("http://127.0.0.1:5000/university/sign_graduate", {
         method: "POST",
@@ -235,10 +235,10 @@ export default function ImportGraduatesPage() {
           </div>
         </div>
 
-        <Steps value={currentStep} className="mb-8">
-          <Step value={1}>Configure Keys</Step>
-          <Step value={2}>Upload Excel</Step>
-          <Step value={3}>Review & Import</Step>
+        <Steps activeStep={currentStep} className="mb-8">
+          <Step step={1} label="Configure Keys" description="Set up signature keys" />
+          <Step step={2} label="Upload Excel" description="Import graduate data" />
+          <Step step={3} label="Review & Import" description="Confirm and complete" />
         </Steps>
 
         <Card>
@@ -429,7 +429,9 @@ export default function ImportGraduatesPage() {
               </div>
             )}
 
-            {currentStep === 3 && <ImportPreview data={previewData} validationResults={validationResults} />}
+            {currentStep === 3 && previewData && (
+              <ImportPreview data={previewData} validationResults={validationResults} />
+            )}
           </CardContent>
           <CardFooter className="flex justify-between">
             {currentStep === 1 && (

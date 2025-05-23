@@ -2,33 +2,26 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import { CheckIcon } from "lucide-react"
 
 const StepsContext = React.createContext<{
-  value: number
-  onChange: (value: number) => void
+  activeStep: number
+  setActiveStep?: (step: number) => void
 }>({
-  value: 1,
-  onChange: () => {},
+  activeStep: 1,
 })
 
-interface StepsProps extends React.HTMLAttributes<HTMLDivElement> {
-  value: number
-  onChange?: (value: number) => void
+interface StepsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
+  activeStep: number
+  setActiveStep?: (step: number) => void
   children?: React.ReactNode
 }
 
 const Steps = React.forwardRef<HTMLDivElement, StepsProps>(
-  ({ value, onChange, className, children, ...props }, ref) => {
-    const handleChange = React.useCallback(
-      (value: number) => {
-        onChange?.(value)
-      },
-      [onChange],
-    )
-
+  ({ activeStep, setActiveStep, className, children, ...props }, ref) => {
     return (
-      <StepsContext.Provider value={{ value, onChange: handleChange }}>
-        <div ref={ref} className={cn("flex items-center w-full", className)} {...props}>
+      <StepsContext.Provider value={{ activeStep, setActiveStep }}>
+        <div ref={ref} className={cn("flex w-full", className)} {...props}>
           {children}
         </div>
       </StepsContext.Provider>
@@ -38,72 +31,64 @@ const Steps = React.forwardRef<HTMLDivElement, StepsProps>(
 Steps.displayName = "Steps"
 
 interface StepProps extends React.HTMLAttributes<HTMLDivElement> {
-  value: number
-  children?: React.ReactNode
+  step: number
+  label: string
+  description?: string
+  clickable?: boolean
 }
 
-const Step = React.forwardRef<HTMLDivElement, StepProps>(({ value, className, children, ...props }, ref) => {
-  const { value: currentValue } = React.useContext(StepsContext)
-  const isActive = currentValue === value
-  const isCompleted = currentValue > value
+const Step = React.forwardRef<HTMLDivElement, StepProps>(
+  ({ step, label, description, clickable = false, className, ...props }, ref) => {
+    const { activeStep, setActiveStep } = React.useContext(StepsContext)
+    const isActive = activeStep === step
+    const isCompleted = activeStep > step
+    const isLast = React.useMemo(() => {
+      const parent = props.children as React.ReactElement[]
+      return !parent || !Array.isArray(parent) || parent.length === 0
+    }, [props.children])
 
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "flex-1 flex items-center gap-2",
-        {
-          "": isActive,
-          "": isCompleted,
-        },
-        className,
-      )}
-      {...props}
-    >
+    const handleClick = () => {
+      if (clickable && setActiveStep && (isCompleted || step === activeStep - 1)) {
+        setActiveStep(step)
+      }
+    }
+
+    return (
       <div
-        className={cn("flex items-center justify-center rounded-full w-8 h-8 text-sm font-medium border", {
-          "bg-primary text-primary-foreground border-primary": isActive,
-          "bg-primary/20 text-primary border-primary/20": isCompleted,
-          "bg-background border-border": !isActive && !isCompleted,
-        })}
-      >
-        {isCompleted ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="w-4 h-4"
-          >
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        ) : (
-          value
+        ref={ref}
+        className={cn(
+          "flex flex-1 items-center",
+          clickable && (isCompleted || step === activeStep - 1) && "cursor-pointer",
+          className,
         )}
-      </div>
-      <span
-        className={cn("text-sm font-medium", {
-          "text-foreground": isActive,
-          "text-muted-foreground": !isActive,
-        })}
+        onClick={handleClick}
+        {...props}
       >
-        {children}
-      </span>
-      {value !== 3 && (
-        <div
-          className={cn("flex-1 h-px bg-border", {
-            "bg-primary/50": isCompleted,
-          })}
-        />
-      )}
-    </div>
-  )
-})
+        <div className="flex flex-col items-center">
+          <div
+            className={cn(
+              "flex h-10 w-10 items-center justify-center rounded-full border-2 text-center font-medium",
+              isActive
+                ? "border-primary bg-primary text-primary-foreground"
+                : isCompleted
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-gray-300 bg-white text-gray-500",
+            )}
+          >
+            {isCompleted ? <CheckIcon className="h-5 w-5" /> : step}
+          </div>
+          <div className="mt-2 text-center">
+            <div className={cn("text-sm font-medium", isActive || isCompleted ? "text-gray-900" : "text-gray-500")}>
+              {label}
+            </div>
+            {description && <div className="mt-1 text-xs text-gray-500">{description}</div>}
+          </div>
+        </div>
+        {!isLast && <div className={cn("flex-1 border-t-2", isCompleted ? "border-primary" : "border-gray-200")} />}
+      </div>
+    )
+  },
+)
 Step.displayName = "Step"
 
 export { Steps, Step }
