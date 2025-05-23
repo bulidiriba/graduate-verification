@@ -17,6 +17,132 @@
       },
       "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
       "signature": "jOCAyNcLF9ab8g8h0QJnVcoxuueY+IXhGffXeyVP9EJh4HLeMex8iH8cQAWVCAKrRJGzOMzM9Pt+ZInxpkniTV5PjbiPu9aBLbZ4cOcaFQ2X4FEaJTKYK6c2/bJiLDoKfCDNgZKF2zdu4yC+mA6Hoa18QsYdqP1gGjtu6Cn95dDA+l78XzJVITPEhT4McvnB+7meJovrpoWd6PdedrKRztelI4n9AWdJBv+eyJLMeEeic0s+y/+5Yhx9hbTSIih5JCNTJq90PWE2N0YBf+Ixgqjsqe49w7UvJvu5f7MXiFkNpY6/Q+kq+DT2WMw5J7nOYFmC4lL98TPhS/QnCVIoFg=="
+    },
+    {
+      "year": "2025",
+      "data": {
+        "name": "Alice Sm",
+        "degree": "BSc CS"
+      },
+      "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
+      "signature": "owjS+i2Cqu+3sUC4tod7EUFcYHONFzDKKlF1QDLBzxzd4OENwksblbGAvMBWGImOTwnQ8zHT5RGOtE/tcVKbkCt8PiUe+F/fuE7cWutx71OEYlxQJV7+PKtmv8hbBcGgl7iSFv0fDMK3FoZx4sliT5/CZdyfzw9U1zvQnwwbDKFAf6DFBwYUxJK4NbhzSFrJQc293djUcy411OolWsPbx3ENCLMyEyU8UvXjR3jsfhMIJRe891dM/2CwrKRUrzVrviSfm0Q9oBYr8s70uhEs1t91Zod8bHR91jdVr5iWkglVqQLq6sQIyqm8HR34qH7Z/rF2HDISL9pB3LRoTqrqcA=="
+    },
+    {
+      "year": "2025",
+      "data": {
+        "name": "John D",
+        "degree": "BA Economics"
+      },
+      "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
+      "signature": "jOCAyNcLF9ab8g8h0QJnVcoxuueY+IXhGffXeyVP9EJh4HLeMex8iH8cQAWVCAKrRJGzOMzM9Pt+ZInxpkniTV5PjbiPu9aBLbZ4cOcaFQ2X4FEaJTKYK6c2/bJiLDoKfCDNgZKF2zdu4yC+mA6Hoa18QsYdqP1gGjtu6Cn95dDA+l78XzJVITPEhT4McvnB+7meJovrpoWd6PdedrKRztelI4n9AWdJBv+eyJLMeEeic0s+y/+5Yhx9hbTSIih5JCNTJq90PWE2N0YBf+Ixgqjsqe49w7UvJvu5f7MXiFkNpY6/Q+kq+DT2WMw5J7nOYFmC4lL98TPhS/QnCVIoFg=="
+    },
+    {
+      "year": "2018",
+      "data": {
+        "studentNationalId": 1,
+        "studentFullName": "Alice Smit",
+        "yearOfGraduation": 2020,
+        "endDate": null,
+        "obtainedCertificate": "",
+        "institutionName": "Addis Ababa University",
+        "institutionCountry": "Ethiopia",
+        "isAccredited": false,
+        "cgpa": 3.2,
+        "qualification": "Bsc",
+        "studyProgram": "computer sceince"
+      },
+      "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
+      "signature": "K3StzQ37zjVAgNkDIeRcCOYLkvSXDsk3y6MBDZpeBihpVPmhJwY0nJXyUbAx1HlkI+Py7LrppnxIUbZw+liMLL36B/JAI829JdaRz2+8+NyfrKaGUkL0U7nPHHoc2EvdcTGojhchx74ojr/eAx/TVJ7CxhKjOt7ECn0cmAgHOw2B2rABovhicK435YGNAj8vxDOdaKdJlC16u9dV75xDEqOG2rjdX67X1O5DnioefS2R908Sp9QMbcArAb4JeK8GVz0T2WHeqTkjWrudA+okW99gPLCUqbgJgqAeac60QppvZRGE7kNyK81ZoGVHBeyl0oNs0ud8BVaBp4SN53iErw=="
+    },
+    {
+      "year": "2018",
+      "data": {
+        "studentNationalId": 2,
+        "studentFullName": "Kedir Abrham",
+        "yearOfGraduation": 2020,
+        "endDate": null,
+        "obtainedCertificate": "",
+        "institutionName": "Addis Ababa University",
+        "institutionCountry": "Ethiopia",
+        "isAccredited": false,
+        "cgpa": 2.7,
+        "qualification": "Msc",
+        "studyProgram": "biology"
+      },
+      "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
+      "signature": "qplTzsDu0OV1ToEaWwSMouFbG07nZ7eGWbLf9miu1Lf+7j924rIL4OMWZ4evo5Y+J0OBxisLihT9ZHPfDYZbLynqWSjbnglUsa+QhQY1TfCK8UhMN/6bK9IuCykxXAkUpf7PAy9o9oVueYi8sFHqMM1a8QNXhIWvTvN9qAE4MaxgS4iXbf1BaV3tm/5ojIjwAU/HgNMgkd1bxigTeqbVC2YAGmy3xbl/tXz9kQ0DASZpxF4Ob3id/Qgu4OACCAzit4/rPbKjSPWIqoHT4604BCNKUWdZG3Wev6Gkue2ZBey5sC1yw3oncYl7Una3gNOjYoY0XHrwzUijOgbPZjS6ng=="
+    },
+    {
+      "year": "2018",
+      "data": {
+        "studentNationalId": 3,
+        "studentFullName": "Hagos Gabrhe",
+        "yearOfGraduation": 2020,
+        "endDate": null,
+        "obtainedCertificate": "",
+        "institutionName": "Addis Ababa University",
+        "institutionCountry": "Ethiopia",
+        "isAccredited": false,
+        "cgpa": 3.2,
+        "qualification": "Bsc",
+        "studyProgram": "medicine"
+      },
+      "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
+      "signature": "psHYVoeEcAiYsiQGW2tmHbxDpUDSMwOo5YZV/wJ8ASnnAN+0jvKks+TMSBNLZijZLsxzOckdHz7a8/wHkcWKj7OmSNgZO4ZsMrX5L57LJfdIR9/feFLgx6t9ETsWisUzwvhggpHYXMRIEeK+eN12NUguwb4j7eKQubuF6EvchdHBi9uMVp65Rm0B7J/IcWzS9yOy4XQ1eEfEkcbnd/HYFPagyTB+3G9lFMxBuPLDjmoR73HsZEXeMm0ILRq6USeiOt4VVjrTxb7wZ6xiv78XjDItjX0lawX4mdCE3mGptpfHGfe4S6+wail4uHWsSTOaZD2lHITep2dbKMenRrQPjg=="
+    },
+    {
+      "year": "2018",
+      "data": {
+        "studentNationalId": 4,
+        "studentFullName": "Caala Bultum",
+        "yearOfGraduation": 2020,
+        "endDate": null,
+        "obtainedCertificate": "",
+        "institutionName": "Addis Ababa University",
+        "institutionCountry": "Ethiopia",
+        "isAccredited": false,
+        "cgpa": 2.7,
+        "qualification": "Msc",
+        "studyProgram": "engineering"
+      },
+      "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
+      "signature": "ATWbaKEVVcKAHR975bkv1L+SB2LpWcjkLZRC39iuKCNey5Cfm0+/Pybc1/xHnznCwZLtubQK+taghsjEeqAYC4c+uOGehSbSEjRtWuc315Z0dVASo7hWB1XtzSRuy/EMfoQCbrRCl7Wi2140oL3cOkOAQT2DOfdHUvHx9SZie9eBosxQ03thQHVZnu/ZIhpAUB3eE4GOtFJWrqHUe/1cAmD4epei7jWyt1aOmaEPRZgTojs6p+ASEwRZH6IcF7/PlCC/MJ53hdVDdHbAxpfrRBIFwHsRxYv2Yj5eaSm58PkXKwCpGBS9dxKXzGZmtxch1Noa/HIlqUdpT29FeRWbwQ=="
+    },
+    {
+      "year": "2018",
+      "data": {
+        "studentNationalId": 5,
+        "studentFullName": "Amen Abera",
+        "yearOfGraduation": 2020,
+        "endDate": null,
+        "obtainedCertificate": "",
+        "institutionName": "Addis Ababa University",
+        "institutionCountry": "Ethiopia",
+        "isAccredited": false,
+        "cgpa": 3.2,
+        "qualification": "Bsc",
+        "studyProgram": "law"
+      },
+      "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
+      "signature": "EWkPhSQ8JvlpViAKkROk9bae9sb7kuRWSegeT8aggOfwKpojCXdNXRGOscVgrocpQFYxjQqHIbDv/QaoOhmnkxxxVGXu/bW8nAsXKvEROmulTntK7mPTGZku2d7tCQyODzO/cvtL+hE6uGq2Cl3ZlURZwusTdZexKERFc/FJWvqNwBwDOHCB4cVD6rIy9+W7gxn9JVh+fw0zsILqD6TWy6IzNzXJygbcCAVEDCw4vb2Tm+3+4nH8fjGHv5vqoDMpO5mNDU2Aw5uXj2u5T3Bt3uyfSzvpZ9muD5ae+0NmvkE32pj6GLlBLK39L2DTQinDsr2bOVBNEWm8eckH2JON0w=="
+    },
+    {
+      "year": "2018",
+      "data": {
+        "studentNationalId": 6,
+        "studentFullName": "Baaca Tesfa",
+        "yearOfGraduation": 2020,
+        "endDate": null,
+        "obtainedCertificate": "",
+        "institutionName": "Addis Ababa University",
+        "institutionCountry": "Ethiopia",
+        "isAccredited": false,
+        "cgpa": 2.7,
+        "qualification": "Msc",
+        "studyProgram": "health"
+      },
+      "moe_signature_key": "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A=",
+      "signature": "d2RLF1fWzYERQBBg+UApRKkQL6MbMT/MnleN3gmsgto7hg28+wjjMsYSaxJErzvBOIEB0uhspSXJRCvnEetJOCg+aH9FNIFInMpMlFsK/7OEkWqsJcU4gj6w0HxozLdzDlkCahLbResxq3t7Jclhp8vgxZX5BnzzznWe1pW0S3cCcb7ffNnCmpZ0ckyrCUe7YWNH1Wwr4jIqbFybrkCVEsb1wYNIqGv22dBW6ml8VKv1qUBo9LOEMCln1j8FEpPsiwDiL5+aokenfyj/AFI6cXvaZzChOdtCBop2BS/PiBTQfE7Pi6Hz7PHKVCNxRbtXoND5xEB5851kUEqrgK9afA=="
     }
   ]
 }
