@@ -44,6 +44,13 @@ interface Graduate {
   certificateUrl?: string
 }
 
+interface CertificateResponse {
+  success: boolean
+  message: string
+  certificate_url?: string
+  error?: string
+}
+
 export default function GraduateDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const unwrappedParams = React.use(params)
   const router = useRouter()
@@ -59,6 +66,7 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
   const [isReplacing, setIsReplacing] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [apiResponse, setApiResponse] = useState<any>(null)
+  const [isFetchingCertificate, setIsFetchingCertificate] = useState(false)
 
   // Fetch graduate data
   useEffect(() => {
@@ -143,6 +151,115 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
     // Otherwise return empty string
     return data.studentNationalId ? data.studentNationalId.toString() : ""
   }
+
+  // Function to check if a certificate exists for the graduate
+  const checkExistingCertificate = async () => {
+    if (!graduate) return
+
+    setIsFetchingCertificate(true)
+    try {
+      // Prepare the payload
+      const payload: Record<string, string> = {
+        university: "Addis Ababa University",
+        name: getGraduateName(),
+      }
+
+      // Add national_id only if it exists
+      const nationalId = getGraduateNationalId()
+      if (nationalId) {
+        payload.national_id = nationalId
+      }
+
+      console.log("Checking for certificate with payload:", payload)
+
+      // Fetch the certificate using POST with JSON payload
+      const response = await fetch("http://127.0.0.1:5000/get_certificate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+
+      // Check the content type of the response
+      const contentType = response.headers.get("content-type")
+      console.log("Response content type:", contentType)
+
+      if (!response.ok) {
+        console.log("Certificate not found or error:", response.status, response.statusText)
+        return
+      }
+
+      // If the response is an image or file, create a blob URL
+      if (contentType && (contentType.includes("image/") || contentType.includes("application/pdf"))) {
+        console.log("Certificate found - creating blob URL")
+        const blob = await response.blob()
+        const certificateUrl = URL.createObjectURL(blob)
+
+        // Update the graduate state with the certificate URL
+        setGraduate((prev) => {
+          if (!prev) return null
+          return {
+            ...prev,
+            certificateUrl: certificateUrl,
+          }
+        })
+
+        toast({
+          title: "Certificate Found",
+          description: "An existing certificate was found for this graduate.",
+        })
+      } else {
+        // If the response is JSON, parse it
+        try {
+          const data: CertificateResponse = await response.json()
+          console.log("Certificate check response:", data)
+
+          if (data.success && data.certificate_url) {
+            // Update the graduate state with the certificate URL
+            setGraduate((prev) => {
+              if (!prev) return null
+              return {
+                ...prev,
+                certificateUrl: data.certificate_url,
+              }
+            })
+
+            toast({
+              title: "Certificate Found",
+              description: "An existing certificate was found for this graduate.",
+            })
+          } else {
+            console.log("No certificate found or error:", data.message || data.error)
+          }
+        } catch (jsonError) {
+          console.error("Error parsing JSON response:", jsonError)
+          // Try to get the response as text for debugging
+          const responseText = await response.text()
+          console.log("Response text:", responseText.substring(0, 100) + "...")
+        }
+      }
+    } catch (error) {
+      console.error("Error checking for existing certificate:", error)
+      // Don't show error toast for certificate not found, as it's expected behavior
+      if (error instanceof Error && !error.message.includes("404")) {
+        toast({
+          title: "Error",
+          description: "Failed to check for existing certificate",
+          variant: "destructive",
+        })
+      }
+    } finally {
+      setIsFetchingCertificate(false)
+    }
+  }
+
+  // Check for existing certificate when the certificate tab is selected
+  useEffect(() => {
+    if (activeTab === "certificate" && graduate && !graduate.certificateUrl) {
+      checkExistingCertificate()
+    }
+  }, [activeTab, graduate])
 
   // Handle input change for editing
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -247,7 +364,7 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
       }
 
       // Create a local URL for preview (in a real app, you'd use the URL from the API response)
-      const certificateUrl = URL.createObjectURL(files[0])
+      const certificateUrl = responseData.certificate_url || URL.createObjectURL(files[0])
 
       // Update the graduate state with the certificate URL
       setGraduate({
@@ -277,6 +394,19 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
         setFiles([])
       }
     }
+  }
+
+  // Handle certificate download
+  const handleDownloadCertificate = () => {
+    if (!graduate?.certificateUrl) return
+
+    // Create a temporary anchor element
+    const link = document.createElement("a")
+    link.href = graduate.certificateUrl
+    link.download = `Certificate_${getGraduateName().replace(/\s+/g, "_")}.pdf`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   if (isLoading) {
@@ -569,7 +699,12 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
                 <CardDescription>View and manage the graduate's certificate</CardDescription>
               </CardHeader>
               <CardContent>
-                {graduate.certificateUrl && !isReplacing ? (
+                {isFetchingCertificate ? (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-gray-500 mb-4" />
+                    <p className="text-gray-500">Checking for existing certificate...</p>
+                  </div>
+                ) : graduate.certificateUrl && !isReplacing ? (
                   <div className="space-y-4">
                     <div className="border rounded-lg p-4 bg-gray-50">
                       <div className="flex items-center justify-between">
@@ -581,7 +716,7 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
                           </div>
                         </div>
                         <div className="flex space-x-2">
-                          <Button>
+                          <Button onClick={handleDownloadCertificate}>
                             <Download className="mr-2 h-4 w-4" />
                             Download
                           </Button>
@@ -610,7 +745,7 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
                     ) : (
                       <div className="flex flex-col items-center justify-center py-6 text-center">
                         <FileText className="h-16 w-16 text-gray-300 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900">No Certificate Uploaded</h3>
+                        <h3 className="text-lg font-medium text-gray-900">No Certificate Found</h3>
                         <p className="mt-1 text-sm text-gray-500 max-w-md">
                           There is no certificate uploaded for this graduate yet. Upload a certificate to make it
                           available for verification.

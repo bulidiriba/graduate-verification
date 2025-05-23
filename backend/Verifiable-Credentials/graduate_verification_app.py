@@ -341,11 +341,11 @@ def upload_certificate():
         }), 500
     
 
-@app.route('/get_certificate', methods=['GET'])
+@app.route('/get_certificate', methods=['POST'])
 def get_certificate():
-    university = request.args.get('university')
-    name = request.args.get('name')
-    national_id = request.args.get('national_id')  # This can be optional
+    university = request.json.get('university')
+    name = request.json.get('name')
+    national_id = request.json.get('national_id')  # Optional
 
     if not university or not name:
         return jsonify({"error": "Missing university or name"}), 400
@@ -369,7 +369,6 @@ def get_certificate():
         return send_file(matching_files[0], as_attachment=True)
     except Exception as e:
         return jsonify({"error": "Failed to send certificate", "details": str(e)}), 500
-    
     
 if __name__ == '__main__':
     app.run(debug=True)
