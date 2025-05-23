@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Download, Pencil, FileText, Upload, Loader2, Check, X } from "lucide-react"
+import { ArrowLeft, Download, Pencil, FileText, Upload, Loader2, Check, X, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { useToast } from "@/hooks/use-toast"
@@ -56,6 +56,7 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
   const [isSaving, setIsSaving] = useState(false)
   const [files, setFiles] = useState<File[]>([])
   const [isUploading, setIsUploading] = useState(false)
+  const [isReplacing, setIsReplacing] = useState(false)
 
   // Fetch graduate data
   useEffect(() => {
@@ -202,6 +203,9 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
         title: "Success",
         description: "Certificate uploaded successfully",
       })
+
+      // Reset the replacing state if we were replacing a certificate
+      setIsReplacing(false)
     } catch (error) {
       console.error("Error uploading certificate:", error)
       toast({
@@ -268,13 +272,13 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
               </Button>
             )}
             {graduate.certificateUrl ? (
-              <Button>
-                <Download className="mr-2 h-4 w-4" />
-                Download Certificate
+              <Button onClick={() => setActiveTab("certificate")}>
+                <FileText className="mr-2 h-4 w-4" />
+                View Certificate
               </Button>
             ) : (
               <Button onClick={() => setActiveTab("certificate")}>
-                <FileText className="mr-2 h-4 w-4" />
+                <Upload className="mr-2 h-4 w-4" />
                 Upload Certificate
               </Button>
             )}
@@ -505,7 +509,7 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
                 <CardDescription>View and manage the graduate's certificate</CardDescription>
               </CardHeader>
               <CardContent>
-                {graduate.certificateUrl ? (
+                {graduate.certificateUrl && !isReplacing ? (
                   <div className="space-y-4">
                     <div className="border rounded-lg p-4 bg-gray-50">
                       <div className="flex items-center justify-between">
@@ -516,10 +520,16 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
                             <p className="text-sm text-gray-500">Uploaded on: {new Date().toLocaleDateString()}</p>
                           </div>
                         </div>
-                        <Button>
-                          <Download className="mr-2 h-4 w-4" />
-                          Download
-                        </Button>
+                        <div className="flex space-x-2">
+                          <Button>
+                            <Download className="mr-2 h-4 w-4" />
+                            Download
+                          </Button>
+                          <Button variant="outline" onClick={() => setIsReplacing(true)}>
+                            <RefreshCw className="mr-2 h-4 w-4" />
+                            Replace Certificate
+                          </Button>
+                        </div>
                       </div>
                     </div>
                     <div className="aspect-[1/1.414] border rounded-lg overflow-hidden bg-white">
@@ -528,17 +538,30 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    <div className="flex flex-col items-center justify-center py-6 text-center">
-                      <FileText className="h-16 w-16 text-gray-300 mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900">No Certificate Uploaded</h3>
-                      <p className="mt-1 text-sm text-gray-500 max-w-md">
-                        There is no certificate uploaded for this graduate yet. Upload a certificate to make it
-                        available for verification.
-                      </p>
-                    </div>
+                    {isReplacing ? (
+                      <div className="flex flex-col items-center justify-center py-6 text-center">
+                        <FileText className="h-16 w-16 text-blue-300 mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900">Replace Certificate</h3>
+                        <p className="mt-1 text-sm text-gray-500 max-w-md">
+                          Upload a new certificate to replace the existing one. The previous certificate will be
+                          overwritten.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-6 text-center">
+                        <FileText className="h-16 w-16 text-gray-300 mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900">No Certificate Uploaded</h3>
+                        <p className="mt-1 text-sm text-gray-500 max-w-md">
+                          There is no certificate uploaded for this graduate yet. Upload a certificate to make it
+                          available for verification.
+                        </p>
+                      </div>
+                    )}
 
                     <div className="space-y-4">
-                      <h3 className="text-base font-medium">Upload Certificate Document</h3>
+                      <h3 className="text-base font-medium">
+                        {isReplacing ? "Select New Certificate Document" : "Upload Certificate Document"}
+                      </h3>
                       <FileUploader
                         files={files}
                         setFiles={setFiles}
@@ -551,17 +574,28 @@ export default function GraduateDetailsPage({ params }: { params: Promise<{ id: 
                         maxSizeInMB={10}
                       />
 
-                      <div className="flex justify-end mt-4">
+                      <div className="flex justify-end space-x-2 mt-4">
+                        {isReplacing && (
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              setIsReplacing(false)
+                              setFiles([])
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        )}
                         <Button onClick={handleUploadCertificate} disabled={isUploading || files.length === 0}>
                           {isUploading ? (
                             <>
                               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Uploading...
+                              {isReplacing ? "Replacing..." : "Uploading..."}
                             </>
                           ) : (
                             <>
                               <Upload className="mr-2 h-4 w-4" />
-                              Upload Certificate
+                              {isReplacing ? "Replace Certificate" : "Upload Certificate"}
                             </>
                           )}
                         </Button>
