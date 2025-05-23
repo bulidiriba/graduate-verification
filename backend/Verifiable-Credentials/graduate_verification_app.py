@@ -201,6 +201,31 @@ def university_sign_graduates():
         return jsonify({"error": "Signing failed", "details": str(e)}), 400
 
 
+@app.route('/university/graduates', methods=['POST'])
+def get_graduates_by_university():
+    data = request.json
+    university = data.get('university')
+
+    if not university:
+        return jsonify({"error": "University name is required"}), 400
+
+    try:
+        with open(GRADUATE_RECORD_FILE, "r") as f:
+            graduate_records = json.load(f)
+
+        if university not in graduate_records:
+            return jsonify({"error": "No graduates found for this university"}), 404
+
+        return jsonify({
+            "university": university,
+            "graduates": graduate_records[university]
+        }), 200
+
+    except FileNotFoundError:
+        return jsonify({"error": "Graduate record file not found"}), 500
+    except Exception as e:
+        return jsonify({"error": "Error retrieving graduate data", "details": str(e)}), 500
+
 @app.route('/verify_graduate', methods=['POST'])
 def verify_graduate():
     name = request.json['name']
