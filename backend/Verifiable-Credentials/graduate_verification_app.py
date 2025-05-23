@@ -131,16 +131,17 @@ def university_generate_private_key():
 @app.route('/university/sign_graduate', methods=['POST'])
 def university_sign_graduates():
     graduate_list = request.json['graduates']  # Expecting a list of graduate data dicts
-    #university_private_key_pem = request.json['university_private_key']
     # For now am I've saved the private key to json and loading from there for testing purpose, instead of always copy pasting
     university = request.json['institution_name']
     year = str(request.json['year'])
-    #moe_signature_key = request.json['moe_signature_key']
-    moe_signature_key = "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A="
+    moe_signature_key = request.json['moe_signature_key']
+    university_private_key_pem = request.json['university_private_key']
+    
+    #moe_signature_key = "zzvs1by79EAW2eMphXV9q5tT/ZBdHcd4FRcGpcZd03A="
 
     # Load private key from temp file
-    with open(TEMP_UNIV_PRIVATE_KEY, "r") as f:
-        university_private_key_pem = json.load(f)["temp_univ_private_key"]
+    # with open(TEMP_UNIV_PRIVATE_KEY, "r") as f:
+    #     university_private_key_pem = json.load(f)["temp_univ_private_key"]
     
     try:
         university_private_key = serialization.load_pem_private_key(
