@@ -80,7 +80,7 @@ export default function GraduatesPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          university: selectedUniversity || "ALL",
+          university: selectedUniversity || "Addis Ababa University",
         }),
       })
 
@@ -90,11 +90,16 @@ export default function GraduatesPage() {
 
       const responseData: ApiResponse = await response.json()
 
-      // Extract the graduates array and add unique IDs if they don’t exist
-      const graduatesWithIds = responseData.graduates.map((graduate, index) => ({
-        ...graduate,
-        id: graduate.id || `grad-${index}-${Date.now()}`, // Generate a unique ID if none exists
-      }))
+      // Extract the graduates array and add unique IDs if they don't exist
+      const graduatesWithIds = responseData.graduates.map((graduate, index) => {
+        const data = graduate.data as any
+        // Use studentNationalId or studentFullName as identifier
+        const identifier = data.studentNationalId || data.studentFullName || data.name || `grad-${index}`
+        return {
+          ...graduate,
+          id: identifier.toString(), // Convert to string for consistency
+        }
+      })
 
       setGraduates(graduatesWithIds)
       setUniversityName(responseData.university || "")
@@ -177,6 +182,15 @@ export default function GraduatesPage() {
     return data.yearOfGraduation?.toString() || graduate.year || "Unknown"
   }
 
+  // Helper function to get graduate identifier for URL
+  const getGraduateIdentifier = (graduate: Graduate): string => {
+    const data = graduate.data as any
+    // Use studentNationalId first, then studentFullName, then name as fallback
+    return encodeURIComponent(
+      data.studentNationalId?.toString() || data.studentFullName || data.name || graduate.id || "unknown",
+    )
+  }
+
   const filteredGraduates = graduates.filter((graduate) => {
     const name = getGraduateName(graduate).toLowerCase()
     const id = getGraduateId(graduate).toLowerCase()
@@ -238,7 +252,7 @@ export default function GraduatesPage() {
                 <SelectValue placeholder="Select university" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">All Universities</SelectItem>
+                <SelectItem value="Addis Ababa University">Addis Ababa University</SelectItem>
                 <SelectItem value="ASTU">Adama Science and Technology University</SelectItem>
                 <SelectItem value="AASTU">Addis Ababa Science and Technology University</SelectItem>
                 <SelectItem value="JU">Jimma University</SelectItem>
@@ -302,7 +316,7 @@ export default function GraduatesPage() {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Button variant="outline" size="sm" className="h-8" asChild>
-                          <Link href={`/admin/graduates/${graduate.id}`}>
+                          <Link href={`/admin/graduates/${getGraduateIdentifier(graduate)}`}>
                             <Eye className="h-3.5 w-3.5 mr-1" />
                             View Details
                           </Link>
