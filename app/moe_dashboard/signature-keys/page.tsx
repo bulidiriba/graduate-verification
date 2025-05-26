@@ -11,7 +11,20 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/hooks/use-toast"
-import { Key, Copy, Trash2, Download, Plus, Search, Filter, ArrowLeft, ToggleLeft, ToggleRight } from "lucide-react"
+import {
+  Key,
+  Copy,
+  Trash2,
+  Download,
+  Plus,
+  Search,
+  Filter,
+  ArrowLeft,
+  ToggleLeft,
+  ToggleRight,
+  X,
+  Loader2,
+} from "lucide-react"
 import Link from "next/link"
 
 interface SignatureKey {
@@ -32,6 +45,7 @@ export default function SignatureKeysPage() {
   const [bulkYear, setBulkYear] = useState("")
   const [bulkKey, setBulkKey] = useState("")
   const [isAddingBulk, setIsAddingBulk] = useState(false)
+  const [universitySearchTerm, setUniversitySearchTerm] = useState("")
 
   // Mock data for signature keys
   const [signatureKeys, setSignatureKeys] = useState<SignatureKey[]>([
@@ -85,7 +99,17 @@ export default function SignatureKeysPage() {
     "Mekelle University",
     "Dire Dawa University",
     "Adama Science and Technology University",
+    "Haramaya University",
+    "Wollo University",
+    "Debre Markos University",
+    "Arba Minch University",
+    "Dilla University",
   ]
+
+  // Filter universities based on search term
+  const filteredUniversities = universities.filter((university) =>
+    university.toLowerCase().includes(universitySearchTerm.toLowerCase()),
+  )
 
   // Filter signature keys based on search and filters
   const filteredKeys = signatureKeys.filter((key) => {
@@ -131,6 +155,26 @@ export default function SignatureKeysPage() {
     setBulkKey(result)
   }
 
+  const handleSelectAllUniversities = (checked: boolean) => {
+    if (checked) {
+      setSelectedUniversities(filteredUniversities)
+    } else {
+      setSelectedUniversities([])
+    }
+  }
+
+  const handleUniversitySelection = (university: string, checked: boolean) => {
+    if (checked) {
+      setSelectedUniversities((prev) => [...prev, university])
+    } else {
+      setSelectedUniversities((prev) => prev.filter((u) => u !== university))
+    }
+  }
+
+  const isAllSelected =
+    filteredUniversities.length > 0 && filteredUniversities.every((uni) => selectedUniversities.includes(uni))
+  const isIndeterminate = filteredUniversities.some((uni) => selectedUniversities.includes(uni)) && !isAllSelected
+
   const handleBulkAdd = () => {
     if (!bulkYear || !bulkKey || selectedUniversities.length === 0) {
       toast({
@@ -158,6 +202,7 @@ export default function SignatureKeysPage() {
       setSelectedUniversities([])
       setBulkYear("")
       setBulkKey("")
+      setUniversitySearchTerm("")
       setIsAddingBulk(false)
 
       toast({
@@ -261,71 +306,168 @@ export default function SignatureKeysPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-3">
+              {/* First Column - University Selection */}
               <div className="space-y-2">
-                <Label>Select Universities</Label>
-                <div className="border rounded-md p-3 max-h-32 overflow-y-auto">
-                  {universities.map((university) => (
-                    <div key={university} className="flex items-center space-x-2 py-1">
-                      <Checkbox
-                        id={university}
-                        checked={selectedUniversities.includes(university)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setSelectedUniversities((prev) => [...prev, university])
-                          } else {
-                            setSelectedUniversities((prev) => prev.filter((u) => u !== university))
-                          }
-                        }}
-                      />
-                      <Label htmlFor={university} className="text-sm font-normal">
-                        {university}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-xs text-muted-foreground">{selectedUniversities.length} universities selected</p>
-              </div>
+                <Label>Search & Select Universities</Label>
 
-              <div className="space-y-2">
-                <Label htmlFor="bulkYear">Year</Label>
-                <Select value={bulkYear} onValueChange={setBulkYear}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select year" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[2020, 2021, 2022, 2023, 2024, 2025].map((year) => (
-                      <SelectItem key={year} value={year.toString()}>
-                        {year}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="bulkKey">Signature Key</Label>
-                <div className="flex space-x-2">
+                {/* Search Universities */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    id="bulkKey"
-                    value={bulkKey}
-                    onChange={(e) => setBulkKey(e.target.value)}
-                    placeholder="Enter or generate key"
-                    className="font-mono text-xs"
+                    placeholder="Search universities..."
+                    value={universitySearchTerm}
+                    onChange={(e) => setUniversitySearchTerm(e.target.value)}
+                    className="pl-10"
                   />
-                  <Button type="button" variant="outline" size="sm" onClick={generateRandomKey}>
-                    Generate
+                </div>
+
+                {/* Select All Checkbox */}
+                <div className="flex items-center space-x-2 py-2 border-b">
+                  <Checkbox
+                    id="select-all"
+                    checked={isAllSelected}
+                    onCheckedChange={handleSelectAllUniversities}
+                    className={isIndeterminate ? "data-[state=checked]:bg-blue-600" : ""}
+                  />
+                  <Label htmlFor="select-all" className="text-sm font-medium">
+                    Select All ({filteredUniversities.length})
+                  </Label>
+                </div>
+
+                {/* Universities List */}
+                <div className="border rounded-md p-3 max-h-56 overflow-y-auto space-y-1">
+                  {filteredUniversities.length > 0 ? (
+                    filteredUniversities.map((university) => (
+                      <div key={university} className="flex items-center space-x-2 py-1">
+                        <Checkbox
+                          id={university}
+                          checked={selectedUniversities.includes(university)}
+                          onCheckedChange={(checked) => handleUniversitySelection(university, checked as boolean)}
+                        />
+                        <Label htmlFor={university} className="text-sm font-normal cursor-pointer">
+                          {university}
+                        </Label>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground py-2">No universities found</p>
+                  )}
+                </div>
+
+                <p className="text-xs text-muted-foreground">Available: {filteredUniversities.length} universities</p>
+              </div>
+
+              {/* Second Column - Selected Universities */}
+              <div className="space-y-2">
+                <Label>Selected Universities ({selectedUniversities.length})</Label>
+
+                <div className="border rounded-md p-3 max-h-56 overflow-y-auto bg-blue-50">
+                  {selectedUniversities.length > 0 ? (
+                    <div className="space-y-1">
+                      {selectedUniversities.map((university) => (
+                        <div
+                          key={university}
+                          className="flex items-center justify-between py-1 px-2 bg-white rounded border"
+                        >
+                          <span className="text-sm font-medium">{university}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleUniversitySelection(university, false)}
+                            className="h-6 w-6 p-0 hover:bg-red-100"
+                          >
+                            <X className="h-3 w-3 text-red-500" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-8 text-center">
+                      <Key className="h-8 w-8 text-gray-300 mb-2" />
+                      <p className="text-sm text-muted-foreground">No universities selected</p>
+                      <p className="text-xs text-muted-foreground">Select universities from the left</p>
+                    </div>
+                  )}
+                </div>
+
+                {selectedUniversities.length > 0 && (
+                  <div className="flex justify-between items-center text-xs text-muted-foreground">
+                    <span>Total selected: {selectedUniversities.length}</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedUniversities([])}
+                      className="h-6 text-xs"
+                    >
+                      Clear All
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Third Column - Year and Signature Key */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="bulkYear">Graduation Year</Label>
+                  <Select value={bulkYear} onValueChange={setBulkYear}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[2020, 2021, 2022, 2023, 2024, 2025].map((year) => (
+                        <SelectItem key={year} value={year.toString()}>
+                          {year}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="bulkKey">MOE Signature Key</Label>
+                  <div className="space-y-2">
+                    <div className="flex space-x-2">
+                      <Input
+                        id="bulkKey"
+                        value={bulkKey}
+                        onChange={(e) => setBulkKey(e.target.value)}
+                        placeholder="Enter or generate key"
+                        className="font-mono text-xs"
+                      />
+                      <Button type="button" variant="outline" size="sm" onClick={generateRandomKey}>
+                        Generate
+                      </Button>
+                    </div>
+                    {bulkKey && (
+                      <div className="p-2 bg-gray-50 rounded border">
+                        <p className="text-xs text-muted-foreground mb-1">Generated Key Preview:</p>
+                        <code className="text-xs break-all">{bulkKey}</code>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <Button
+                    onClick={handleBulkAdd}
+                    disabled={isAddingBulk || selectedUniversities.length === 0 || !bulkYear || !bulkKey}
+                    className="w-full"
+                  >
+                    {isAddingBulk ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Adding Keys...
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Keys to {selectedUniversities.length} Universities
+                      </>
+                    )}
                   </Button>
                 </div>
               </div>
             </div>
-
-            <Button
-              onClick={handleBulkAdd}
-              disabled={isAddingBulk || selectedUniversities.length === 0 || !bulkYear || !bulkKey}
-              className="w-full"
-            >
-              {isAddingBulk ? "Adding Keys..." : `Add Keys to ${selectedUniversities.length} Universities`}
-            </Button>
           </CardContent>
         </Card>
 
