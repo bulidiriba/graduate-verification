@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { FileCheck, School, Users, BookOpen, Key } from "lucide-react"
+import { FileCheck, School, Users, BookOpen, Key, UserCog } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Header } from "@/components/header"
@@ -30,6 +30,16 @@ export default function MoeDashboard() {
               <Link href="/moe_dashboard/signature-keys">
                 <Key className="mr-2 h-4 w-4" />
                 Manage All Signature Keys
+              </Link>
+            </Button>
+            <Button
+              variant="outline"
+              className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
+              asChild
+            >
+              <Link href="/moe_dashboard/credentials">
+                <UserCog className="mr-2 h-4 w-4" />
+                Manage All Credentials
               </Link>
             </Button>
           </div>
