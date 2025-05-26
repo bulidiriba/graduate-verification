@@ -29,36 +29,44 @@ def moe_sign_data(data):
 
 @app.route('/moe/generate_keys_for_university', methods=['POST'])
 def moe_generate_keys_for_university():
-    university = request.json['university']
-    year = request.json['year']
+    university_list = request.json.get('universities', [])
 
-    # Simulate MoE generating a public key and signature key for this university
-    moe_private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-    moe_public_key = moe_private_key.public_key()
+    if not university_list:
+        return jsonify({"error": "No university data provided"}), 400
 
-    moe_public_pem = moe_public_key.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
-    ).decode()
+    response_data = []
 
-    moe_signature_key = base64.b64encode(
-        hashlib.sha256(f"{university}_{year}_signature_key".encode()).digest()
-    ).decode()
+    for uni in university_list:
+        university = uni.get('university')
+        year = str(uni.get('year'))
+        moe_signature_key = uni.get('moe_signature_key')
 
-    data = {
-        "university": university,
-        "year": year,
-        "moe_signature_key": moe_signature_key
-    }
+        if not university or not year or not moe_signature_key:
+            continue  # Skip incomplete records
 
-    save_university_credential_to_file(data)
+        data = {
+            "university": university,
+            "year": year,
+            "moe_signature_key": moe_signature_key
+        }
 
-    return jsonify({
-        "university": university,
-        "year": year,
-        "moe_signature_key": moe_signature_key
-    })
+        try:
+            save_university_credential_to_file(data)
+            response_data.append({
+                "university": university,
+                "year": year,
+                "moe_signature_key": moe_signature_key,
+                "status": "saved"
+            })
+        except Exception as e:
+            response_data.append({
+                "university": university,
+                "year": year,
+                "error": str(e),
+                "status": "failed"
+            })
 
+    return jsonify({"results": response_data})
 def save_university_credential_to_file(data):
     university = data.get("university")
     year = str(data.get("year"))

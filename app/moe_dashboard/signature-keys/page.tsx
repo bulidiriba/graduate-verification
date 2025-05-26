@@ -175,7 +175,7 @@ export default function SignatureKeysPage() {
     filteredUniversities.length > 0 && filteredUniversities.every((uni) => selectedUniversities.includes(uni))
   const isIndeterminate = filteredUniversities.some((uni) => selectedUniversities.includes(uni)) && !isAllSelected
 
-  const handleBulkAdd = () => {
+  const handleBulkAdd = async () => {
     if (!bulkYear || !bulkKey || selectedUniversities.length === 0) {
       toast({
         title: "Error",
@@ -187,8 +187,35 @@ export default function SignatureKeysPage() {
 
     setIsAddingBulk(true)
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // Prepare the payload in the required format
+      const payload = {
+        universities: selectedUniversities.map((university) => ({
+          university: university,
+          year: Number.parseInt(bulkYear),
+          moe_signature_key: bulkKey,
+        })),
+      }
+
+      console.log("Sending payload to API:", payload)
+
+      // Send POST request to the API
+      const response = await fetch("http://127.0.0.1:5000/moe/generate_keys_for_university", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+
+      const responseData = await response.json()
+      console.log("API Response:", responseData)
+
+      if (!response.ok) {
+        throw new Error(responseData.error || `API request failed: ${response.status} ${response.statusText}`)
+      }
+
+      // Update the local state with the new keys (assuming the API returns the created keys)
       const newKeys = selectedUniversities.map((university, index) => ({
         id: `new_${Date.now()}_${index}`,
         university,
@@ -203,13 +230,21 @@ export default function SignatureKeysPage() {
       setBulkYear("")
       setBulkKey("")
       setUniversitySearchTerm("")
-      setIsAddingBulk(false)
 
       toast({
         title: "Success",
-        description: `Added signature keys for ${selectedUniversities.length} universities`,
+        description: `Successfully added signature keys for ${selectedUniversities.length} universities`,
       })
-    }, 1000)
+    } catch (error) {
+      console.error("Error adding signature keys:", error)
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to add signature keys. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsAddingBulk(false)
+    }
   }
 
   const handleExport = () => {
