@@ -1,23 +1,10 @@
-import { Header } from "@/components/header";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ArrowLeft, Plus, Search } from "lucide-react";
-import Link from "next/link";
+import { Header } from "@/components/header"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { ArrowLeft, Plus, Search } from "lucide-react"
+import Link from "next/link"
 
 export default function UniversitiesPage() {
   // Sample data for universities
@@ -30,54 +17,12 @@ export default function UniversitiesPage() {
       graduates: 124563,
       programs: 87,
     },
-    {
-      id: 2,
-      name: "Bahir Dar University",
-      location: "Bahir Dar",
-      established: 1963,
-      graduates: 87421,
-      programs: 65,
-    },
-    {
-      id: 3,
-      name: "Jimma University",
-      location: "Jimma",
-      established: 1983,
-      graduates: 56234,
-      programs: 52,
-    },
-    {
-      id: 4,
-      name: "Hawassa University",
-      location: "Hawassa",
-      established: 1976,
-      graduates: 42156,
-      programs: 48,
-    },
-    {
-      id: 5,
-      name: "Mekelle University",
-      location: "Mekelle",
-      established: 1991,
-      graduates: 31245,
-      programs: 43,
-    },
-    {
-      id: 6,
-      name: "Gondar University",
-      location: "Gondar",
-      established: 1954,
-      graduates: 28765,
-      programs: 39,
-    },
-    {
-      id: 7,
-      name: "Arba Minch University",
-      location: "Arba Minch",
-      established: 1986,
-      graduates: 24532,
-      programs: 37,
-    },
+    { id: 2, name: "Bahir Dar University", location: "Bahir Dar", established: 1963, graduates: 87421, programs: 65 },
+    { id: 3, name: "Jimma University", location: "Jimma", established: 1983, graduates: 56234, programs: 52 },
+    { id: 4, name: "Hawassa University", location: "Hawassa", established: 1976, graduates: 42156, programs: 48 },
+    { id: 5, name: "Mekelle University", location: "Mekelle", established: 1991, graduates: 31245, programs: 43 },
+    { id: 6, name: "Gondar University", location: "Gondar", established: 1954, graduates: 28765, programs: 39 },
+    { id: 7, name: "Arba Minch University", location: "Arba Minch", established: 1986, graduates: 24532, programs: 37 },
     {
       id: 8,
       name: "Adama Science and Technology University",
@@ -86,7 +31,7 @@ export default function UniversitiesPage() {
       graduates: 21345,
       programs: 32,
     },
-  ];
+  ]
 
   return (
     <main className="w-full min-h-screen bg-gray-50">
@@ -101,12 +46,8 @@ export default function UniversitiesPage() {
               </Link>
             </Button>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">
-                Manage Universities
-              </h1>
-              <p className="text-muted-foreground">
-                Manage and monitor registered universities
-              </p>
+              <h1 className="text-3xl font-bold tracking-tight">Universities</h1>
+              <p className="text-muted-foreground">Manage and monitor registered universities</p>
             </div>
           </div>
           <Button className="bg-[#2F4D8A] hover:bg-[#243c6d] text-white self-start sm:self-center">
@@ -118,9 +59,7 @@ export default function UniversitiesPage() {
         <Card>
           <CardHeader>
             <CardTitle>Universities</CardTitle>
-            <CardDescription>
-              List of all registered universities in the system
-            </CardDescription>
+            <CardDescription>List of all registered universities in the system</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center mb-6">
@@ -145,22 +84,14 @@ export default function UniversitiesPage() {
                 <TableBody>
                   {universities.map((university) => (
                     <TableRow key={university.id}>
-                      <TableCell className="font-medium">
-                        {university.name}
-                      </TableCell>
+                      <TableCell className="font-medium">{university.name}</TableCell>
                       <TableCell>{university.location}</TableCell>
                       <TableCell>{university.established}</TableCell>
-                      <TableCell>
-                        {university.graduates.toLocaleString()}
-                      </TableCell>
+                      <TableCell>{university.graduates.toLocaleString()}</TableCell>
                       <TableCell>{university.programs}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="outline" size="sm" asChild>
-                          <Link
-                            href={`/moe_dashboard/universities/${university.id}`}
-                          >
-                            View Details
-                          </Link>
+                          <Link href={`/moe_dashboard/universities/${university.id}`}>View Details</Link>
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -172,5 +103,5 @@ export default function UniversitiesPage() {
         </Card>
       </div>
     </main>
-  );
+  )
 }
