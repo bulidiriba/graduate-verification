@@ -4,11 +4,10 @@ from flask_cors import CORS
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.backends import default_backend
-from database_model import db, UniversityCredential, GraduateRecord
+from database_model import db, UniversityCredentials, GraduateRecord
 import base64
 import json
 
-from database_model import db, UniversityCredential
 
 app = Flask(__name__)
 CORS(app)
@@ -37,11 +36,11 @@ def moe_generate_keys_for_university():
         if not university or not year or not moe_signature_key:
             continue
 
-        existing = UniversityCredential.query.filter_by(university=university, year=year).first()
+        existing = UniversityCredentials.query.filter_by(university=university, year=year).first()
         if existing:
             existing.moe_signature_key = moe_signature_key
         else:
-            new_entry = UniversityCredential(
+            new_entry = UniversityCredentials(
                 university=university,
                 year=year,
                 moe_signature_key=moe_signature_key
@@ -88,7 +87,7 @@ def university_generate_private_key():
         ).decode()
 
         # Save public key to DB
-        credential = UniversityCredential(
+        credential = UniversityCredentials(
             university=university_name,
             year=year,
             moe_signature_key=moe_signature_key,
@@ -159,5 +158,43 @@ def university_sign_graduates():
     except Exception as e:
         return jsonify({"error": "Signing failed", "details": str(e)}), 400
 
+@app.route('/university/graduates', methods=['POST'])
+def get_graduates_by_university():
+    data = request.json
+    university = data.get('university')
+
+    if not university:
+        return jsonify({"error": "University name is required"}), 400
+
+    try:
+        # Query the database for matching graduates
+        graduate_records = GraduateRecord.query.filter_by(university=university).all()
+
+        if not graduate_records:
+            return jsonify({"error": "No graduates found for this university"}), 404
+
+        # Decode the JSON-encoded data for each graduate
+        graduates_data = []
+        for record in graduate_records:
+            try:
+                graduate_info = json.loads(record.data)
+            except json.JSONDecodeError:
+                graduate_info = {"error": "Invalid JSON data in record"}
+            
+            graduates_data.append({
+                "data": graduate_info,
+                "year": record.year,
+                "moe_signature_key": record.moe_signature_key,
+                "signature": record.signature
+            })
+
+        return jsonify({
+            "university": university,
+            "graduates": graduates_data
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": "Error retrieving graduate data", "details": str(e)}), 500
+    
 if __name__ == '__main__':
     app.run(debug=True)
