@@ -4,9 +4,12 @@ from flask_cors import CORS
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.backends import default_backend
-from database_model import db, UniversityCredentials, GraduateRecord
+from database_model import db, UniversityCredentials, GraduateRecord, Certificate
+from werkzeug.utils import secure_filename
 import base64
 import json
+from flask import send_file
+import io
 
 
 app = Flask(__name__)
@@ -195,6 +198,73 @@ def get_graduates_by_university():
 
     except Exception as e:
         return jsonify({"error": "Error retrieving graduate data", "details": str(e)}), 500
-    
+
+@app.route('/upload_certificate', methods=['POST'])
+def upload_certificate():
+    university = request.form.get('university')
+    name = request.form.get('name')
+    national_id = request.form.get('national_id')  # Optional
+    file = request.files.get('certificate')
+
+    if not all([university, name, file]):
+        return jsonify({"error": "Missing required fields: university, name, or certificate"}), 400
+
+    try:
+        # Read file content and save to DB
+        new_certificate = Certificate(
+            university=university.strip(),
+            name=name.strip(),
+            national_id=national_id.strip() if national_id else None,
+            filename=secure_filename(file.filename),
+            file_data=file.read(),
+            mimetype=file.mimetype
+        )
+
+        db.session.add(new_certificate)
+        db.session.commit()
+
+        return jsonify({
+            "message": "Certificate uploaded successfully",
+            "id": new_certificate.id,
+            "filename": new_certificate.filename
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Failed to upload certificate", "details": str(e)}), 500
+
+
+@app.route('/get_certificate', methods=['POST'])
+def get_certificate():
+    university = request.json.get('university')
+    name = request.json.get('name')
+    national_id = request.json.get('national_id')  # Optional
+
+    if not university or not name:
+        return jsonify({"error": "Missing university or name"}), 400
+
+    query = Certificate.query.filter_by(
+        university=university.strip(),
+        name=name.strip()
+    )
+
+    if national_id:
+        query = query.filter_by(national_id=national_id.strip())
+
+    certificate = query.first()
+
+    if not certificate:
+        return jsonify({"error": "Certificate not found"}), 404
+
+    try:
+        return send_file(
+            io.BytesIO(certificate.file_data),
+            mimetype=certificate.mimetype,
+            download_name=certificate.filename,
+            as_attachment=True
+        )
+    except Exception as e:
+        return jsonify({"error": "Failed to send certificate", "details": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True)
