@@ -23,5 +23,4 @@ class Certificate(db.Model):
     name = db.Column(db.String, nullable=False)
     national_id = db.Column(db.String, nullable=True)
     filename = db.Column(db.String, nullable=False)
-    file_data = db.Column(db.LargeBinary, nullable=False)
-    mimetype = db.Column(db.String, nullable=False)
+    filepath = db.Column(db.String, nullable=False)  # e.g., "certificates/addis_alem_1234.pdf"
